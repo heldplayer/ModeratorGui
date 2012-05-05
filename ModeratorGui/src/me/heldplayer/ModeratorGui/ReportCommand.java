@@ -1,5 +1,6 @@
 package me.heldplayer.ModeratorGui;
 
+import me.heldplayer.ModeratorGui.tables.Bans;
 import me.heldplayer.ModeratorGui.tables.Issues;
 
 import org.bukkit.command.Command;
@@ -32,6 +33,28 @@ public class ReportCommand implements CommandExecutor {
 			issueRow.setTimestamp(System.currentTimeMillis());
 			
 			main.getDatabase().save(issueRow);
+			
+			return true;
+		}
+		
+		if (args[0].equalsIgnoreCase("ban") && args.length > 2) {
+			String reason = "";
+
+			for (int i = 2; i < args.length; i++) {
+				reason += " " + args[i];
+			}
+
+			reason = reason.trim();
+
+			Bans banRow = new Bans();
+			banRow.setReason(reason);
+			banRow.setBanned(args[1]);
+			banRow.setBanner(sender.getName());
+			banRow.setTimestamp(System.currentTimeMillis());
+			
+			main.getDatabase().save(banRow);
+			
+			return true;
 		}
 
 		return false;
