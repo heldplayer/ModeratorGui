@@ -8,7 +8,7 @@ import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotNull;
 
 @Entity()
-@Table(name = "mgui_issues")
+@Table(name = "mgui_bans")
 public class Bans {
 
 	@Id
