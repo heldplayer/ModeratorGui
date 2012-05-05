@@ -28,6 +28,8 @@ public class ModeratorGui extends JavaPlugin {
 		
 		pdf = getDescription();
 		
+		getCommand("report").setExecutor(new ReportCommand(this));
+		
 		isRunning = true;
 
 		getLogger().info("Enabled!");
