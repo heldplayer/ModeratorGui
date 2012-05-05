@@ -23,6 +23,10 @@ public class ReportCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
+		if(args.length <= 0){
+			return false;
+		}
+		
 		if (args[0].equalsIgnoreCase("issue") && args.length > 2 && sender.hasPermission("moderatorgui.issue")) {
 			List<String> matchedNames = getPlayerMatches(args[1]);
 
