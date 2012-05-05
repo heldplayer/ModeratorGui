@@ -69,6 +69,8 @@ public class ReportCommand implements CommandExecutor {
 			issueRow.setTimestamp(System.currentTimeMillis());
 
 			main.getDatabase().save(issueRow);
+			
+			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
 			return true;
 		}
@@ -114,6 +116,8 @@ public class ReportCommand implements CommandExecutor {
 			banRow.setTimestamp(System.currentTimeMillis());
 
 			main.getDatabase().save(banRow);
+			
+			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
 			return true;
 		}
@@ -160,6 +164,8 @@ public class ReportCommand implements CommandExecutor {
 			unbanRow.setTimestamp(System.currentTimeMillis());
 
 			main.getDatabase().save(unbanRow);
+			
+			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
 			return true;
 		}
