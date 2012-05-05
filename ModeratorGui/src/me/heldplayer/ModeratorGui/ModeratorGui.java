@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 
 import me.heldplayer.ModeratorGui.tables.Bans;
+import me.heldplayer.ModeratorGui.tables.Demotions;
 import me.heldplayer.ModeratorGui.tables.Issues;
 import me.heldplayer.ModeratorGui.tables.Promotions;
 import me.heldplayer.ModeratorGui.tables.Unbans;
@@ -54,6 +55,7 @@ public class ModeratorGui extends JavaPlugin {
 		list.add(Bans.class);
 		list.add(Unbans.class);
 		list.add(Promotions.class);
+		list.add(Demotions.class);
 		return list;
 	}
 }
