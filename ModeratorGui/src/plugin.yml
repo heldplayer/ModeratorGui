@@ -1,0 +1,34 @@
+name: ModeratorGui
+main: me.heldplayer.ModeratorGui.ModeratorGui
+version: 0.1
+author: heldplayer
+description: Plugin for server moderation
+database: true
+commands:
+  report:
+    description: Main command for reporting moderation stuff
+    permissions: moderatorgui.command
+    usage: /<command> help
+permissions:
+  moderatorgui:
+    default: op
+    description: Command for full rights
+    children:
+      moderatorgui.command: true
+      moderatorgui.issue: true
+      moderatorgui.ban: true
+      moderatorgui.unban: true
+      moderatorgui.promote: true
+      moderatorgui.demote: true
+  moderatorgui.command:
+    description: Allows using the report command
+  moderatorgui.issue:
+    description: Allows reporting issues with players
+  moderatorgui.ban:
+    description: Allows reporting banning a player
+  moderatorgui.unban:
+    description: Allows reporting unbanning a player
+  moderatorgui.promote:
+    description: Allows reporting promotions
+  moderatorgui.demote:
+    description: Allows reporting demotions
