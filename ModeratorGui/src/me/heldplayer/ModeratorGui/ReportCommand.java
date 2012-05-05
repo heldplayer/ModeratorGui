@@ -2,6 +2,7 @@ package me.heldplayer.ModeratorGui;
 
 import me.heldplayer.ModeratorGui.tables.Bans;
 import me.heldplayer.ModeratorGui.tables.Issues;
+import me.heldplayer.ModeratorGui.tables.Unbans;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -53,6 +54,26 @@ public class ReportCommand implements CommandExecutor {
 			banRow.setTimestamp(System.currentTimeMillis());
 			
 			main.getDatabase().save(banRow);
+			
+			return true;
+		}
+		
+		if (args[0].equalsIgnoreCase("unban") && args.length > 2) {
+			String reason = "";
+
+			for (int i = 2; i < args.length; i++) {
+				reason += " " + args[i];
+			}
+
+			reason = reason.trim();
+
+			Unbans unbanRow = new Unbans();
+			unbanRow.setReason(reason);
+			unbanRow.setUnbanned(args[1]);
+			unbanRow.setUnbanner(sender.getName());
+			unbanRow.setTimestamp(System.currentTimeMillis());
+			
+			main.getDatabase().save(unbanRow);
 			
 			return true;
 		}
