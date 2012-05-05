@@ -9,6 +9,10 @@ commands:
     description: Main command for reporting moderation stuff
     permissions: moderatorgui.command
     usage: /<command> help
+  review:
+    description: Main command for reviewing moderation stuff
+    permissions: moderatorgui.command
+    usage: /<command> help
 permissions:
   moderatorgui:
     default: op

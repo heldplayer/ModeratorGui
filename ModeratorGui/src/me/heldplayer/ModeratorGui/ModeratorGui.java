@@ -7,11 +7,13 @@ import javax.persistence.PersistenceException;
 
 import me.heldplayer.ModeratorGui.tables.Issues;
 
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ModeratorGui extends JavaPlugin {
 
 	public static boolean isRunning = false;
+	public PluginDescriptionFile pdf;
 
 	@Override
 	public void onDisable() {
@@ -23,6 +25,8 @@ public class ModeratorGui extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		setupDatabase();
+		
+		pdf = getDescription();
 		
 		isRunning = true;
 
