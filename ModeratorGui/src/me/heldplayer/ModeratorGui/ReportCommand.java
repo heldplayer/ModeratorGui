@@ -44,7 +44,7 @@ public class ReportCommand implements CommandExecutor {
 				String matches = "";
 
 				for (String matched : matchedNames) {
-					matches = ", " + matched;
+					matches += ", " + matched;
 				}
 
 				matches = matches.replaceFirst(", ", "").trim();
@@ -90,7 +90,7 @@ public class ReportCommand implements CommandExecutor {
 				String matches = "";
 
 				for (String matched : matchedNames) {
-					matches = ", " + matched;
+					matches += ", " + matched;
 				}
 
 				matches = matches.replaceFirst(", ", "").trim();
@@ -135,7 +135,7 @@ public class ReportCommand implements CommandExecutor {
 				String matches = "";
 
 				for (String matched : matchedNames) {
-					matches = ", " + matched;
+					matches += ", " + matched;
 				}
 
 				matches = matches.replaceFirst(", ", "").trim();
