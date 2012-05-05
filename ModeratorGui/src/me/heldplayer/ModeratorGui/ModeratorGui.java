@@ -7,6 +7,7 @@ import javax.persistence.PersistenceException;
 
 import me.heldplayer.ModeratorGui.tables.Bans;
 import me.heldplayer.ModeratorGui.tables.Issues;
+import me.heldplayer.ModeratorGui.tables.Promotions;
 import me.heldplayer.ModeratorGui.tables.Unbans;
 
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -52,6 +53,7 @@ public class ModeratorGui extends JavaPlugin {
 		list.add(Issues.class);
 		list.add(Bans.class);
 		list.add(Unbans.class);
+		list.add(Promotions.class);
 		return list;
 	}
 }
