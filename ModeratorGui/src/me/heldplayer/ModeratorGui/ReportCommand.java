@@ -3,11 +3,7 @@ package me.heldplayer.ModeratorGui;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.heldplayer.ModeratorGui.tables.Bans;
-import me.heldplayer.ModeratorGui.tables.Demotions;
-import me.heldplayer.ModeratorGui.tables.Issues;
-import me.heldplayer.ModeratorGui.tables.Promotions;
-import me.heldplayer.ModeratorGui.tables.Unbans;
+import me.heldplayer.ModeratorGui.tables.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -28,6 +24,8 @@ public class ReportCommand implements CommandExecutor {
 		if (args.length <= 0) {
 			return false;
 		}
+		
+		long timeStamp = System.currentTimeMillis();
 
 		if (args[0].equalsIgnoreCase("issue") && args.length > 2 && sender.hasPermission("moderatorgui.issue")) {
 			List<String> matchedNames = getPlayerMatches(args[1]);
@@ -68,10 +66,13 @@ public class ReportCommand implements CommandExecutor {
 			issueRow.setIssue(issue);
 			issueRow.setReported(name);
 			issueRow.setReporter(sender.getName());
-			issueRow.setTimestamp(System.currentTimeMillis());
+			issueRow.setTimestamp(timeStamp);
 
 			main.getDatabase().save(issueRow);
 			
+			Issues created = main.getDatabase().find(Issues.class).where().eq("timestamp", timeStamp).findUnique();
+			report(created.getId(), ReportType.ISSUE);
+
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
 			return true;
@@ -115,10 +116,13 @@ public class ReportCommand implements CommandExecutor {
 			banRow.setReason(reason);
 			banRow.setBanned(name);
 			banRow.setBanner(sender.getName());
-			banRow.setTimestamp(System.currentTimeMillis());
+			banRow.setTimestamp(timeStamp);
 
 			main.getDatabase().save(banRow);
 			
+			Bans created = main.getDatabase().find(Bans.class).where().eq("timestamp", timeStamp).findUnique();
+			report(created.getId(), ReportType.BAN);
+
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
 			return true;
@@ -163,15 +167,18 @@ public class ReportCommand implements CommandExecutor {
 			unbanRow.setReason(reason);
 			unbanRow.setUnbanned(name);
 			unbanRow.setUnbanner(sender.getName());
-			unbanRow.setTimestamp(System.currentTimeMillis());
+			unbanRow.setTimestamp(timeStamp);
 
 			main.getDatabase().save(unbanRow);
 			
+			Unbans created = main.getDatabase().find(Unbans.class).where().eq("timestamp", timeStamp).findUnique();
+			report(created.getId(), ReportType.UNBAN);
+
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
 			return true;
 		}
-		
+
 		if (args[0].equalsIgnoreCase("promote") && args.length > 4 && sender.hasPermission("moderatorgui.promote")) {
 			List<String> matchedNames = getPlayerMatches(args[1]);
 
@@ -198,7 +205,7 @@ public class ReportCommand implements CommandExecutor {
 
 				return true;
 			}
-			
+
 			List<String> matchedRanks1 = getRankMatches(args[2]);
 
 			String rank1 = "";
@@ -224,7 +231,7 @@ public class ReportCommand implements CommandExecutor {
 
 				return true;
 			}
-			
+
 			List<String> matchedRanks2 = getRankMatches(args[3]);
 
 			String rank2 = "";
@@ -265,15 +272,18 @@ public class ReportCommand implements CommandExecutor {
 			promotionRow.setPromoter(sender.getName());
 			promotionRow.setPrevRank(rank1);
 			promotionRow.setNewRank(rank2);
-			promotionRow.setTimestamp(System.currentTimeMillis());
+			promotionRow.setTimestamp(timeStamp);
 
 			main.getDatabase().save(promotionRow);
 			
+			Promotions created = main.getDatabase().find(Promotions.class).where().eq("timestamp", timeStamp).findUnique();
+			report(created.getId(), ReportType.PROMOTE);
+
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
 			return true;
 		}
-		
+
 		if (args[0].equalsIgnoreCase("demote") && args.length > 4 && sender.hasPermission("moderatorgui.demote")) {
 			List<String> matchedNames = getPlayerMatches(args[1]);
 
@@ -300,7 +310,7 @@ public class ReportCommand implements CommandExecutor {
 
 				return true;
 			}
-			
+
 			List<String> matchedRanks1 = getRankMatches(args[2]);
 
 			String rank1 = "";
@@ -326,7 +336,7 @@ public class ReportCommand implements CommandExecutor {
 
 				return true;
 			}
-			
+
 			List<String> matchedRanks2 = getRankMatches(args[3]);
 
 			String rank2 = "";
@@ -367,10 +377,13 @@ public class ReportCommand implements CommandExecutor {
 			demotionRow.setDemoter(sender.getName());
 			demotionRow.setPrevRank(rank1);
 			demotionRow.setNewRank(rank2);
-			demotionRow.setTimestamp(System.currentTimeMillis());
+			demotionRow.setTimestamp(timeStamp);
 
 			main.getDatabase().save(demotionRow);
 			
+			Demotions created = main.getDatabase().find(Demotions.class).where().eq("timestamp", timeStamp).findUnique();
+			report(created.getId(), ReportType.DEMOTE);
+
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
 			return true;
@@ -385,12 +398,12 @@ public class ReportCommand implements CommandExecutor {
 		List<String> matched = new ArrayList<String>();
 
 		for (OfflinePlayer player : players) {
-			if(player.getName().equalsIgnoreCase(name)){
+			if (player.getName().equalsIgnoreCase(name)) {
 				matched.clear();
 				matched.add(player.getName());
 				return matched;
 			}
-			if(player.getName().length() < name.length()){
+			if (player.getName().length() < name.length()) {
 				continue;
 			}
 			if (player.getName().substring(0, name.length()).equalsIgnoreCase(name)) {
@@ -400,19 +413,19 @@ public class ReportCommand implements CommandExecutor {
 
 		return matched;
 	}
-	
+
 	private List<String> getRankMatches(String rank) {
 		List<String> ranks = main.ranks;
 
 		List<String> matched = new ArrayList<String>();
 
 		for (String matchedRank : ranks) {
-			if(matchedRank.equalsIgnoreCase(rank)){
+			if (matchedRank.equalsIgnoreCase(rank)) {
 				matched.clear();
 				matched.add(matchedRank);
 				return matched;
 			}
-			if(matchedRank.length() < rank.length()){
+			if (matchedRank.length() < rank.length()) {
 				continue;
 			}
 			if (matchedRank.substring(0, rank.length()).equalsIgnoreCase(rank)) {
@@ -421,5 +434,14 @@ public class ReportCommand implements CommandExecutor {
 		}
 
 		return matched;
+	}
+
+	private void report(int id, ReportType type) {
+		Lists listRow = new Lists();
+		
+		listRow.setReportId(id);
+		listRow.setType(type.getId());
+		
+		main.getDatabase().save(listRow);
 	}
 }

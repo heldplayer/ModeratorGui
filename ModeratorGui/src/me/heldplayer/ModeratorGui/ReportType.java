@@ -9,6 +9,10 @@ public enum ReportType {
 		this.id = id;
 	}
 
+	public int getId() {
+		return id;
+	}
+
 	public static ReportType getType(int id) {
 		for (ReportType type : values()) {
 			if (type.id == id) {
