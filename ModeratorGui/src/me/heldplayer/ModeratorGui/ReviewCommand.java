@@ -74,6 +74,8 @@ public class ReviewCommand implements CommandExecutor {
 
 				sideI++;
 			}
+			
+			sender.sendMessage(results);
 
 			return true;
 		}
