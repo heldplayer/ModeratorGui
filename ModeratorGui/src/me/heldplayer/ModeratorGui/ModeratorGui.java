@@ -42,6 +42,7 @@ public class ModeratorGui extends JavaPlugin {
 		ranks = config.getStringList("ranks");
 
 		getCommand("report").setExecutor(new ReportCommand(this));
+		getCommand("review").setExecutor(new ReviewCommand(this));
 
 		isRunning = true;
 
