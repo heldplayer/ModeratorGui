@@ -29,7 +29,7 @@ public class ReviewCommand implements CommandExecutor {
 
 			results[0] = ChatColor.GRAY + "Types: " + ChatColor.YELLOW + "Issue " + ChatColor.DARK_RED + "Ban " + ChatColor.DARK_GREEN + "Unban " + ChatColor.RED + "Promote " + ChatColor.GREEN + "Demote";
 			results[1] = ChatColor.GRAY + "Current time: " + dateFormat.format(Long.valueOf(System.currentTimeMillis()));
-			results[1] = ChatColor.GRAY + "" + ChatColor.ITALIC + "All times are MM-dd-yyyy HH:mm:ss";
+			results[2] = ChatColor.GRAY + "" + ChatColor.ITALIC + "All times are MM-dd-yyyy HH:mm:ss";
 
 			int sideI = 3;
 			for (int i = rowCount; i > Math.max(rowCount - 10, rowCount); i--) {
