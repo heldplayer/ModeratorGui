@@ -253,7 +253,7 @@ public class ReportCommand implements CommandExecutor {
 
 			String reason = "";
 
-			for (int i = 2; i < args.length; i++) {
+			for (int i = 4; i < args.length; i++) {
 				reason += " " + args[i];
 			}
 
@@ -355,7 +355,7 @@ public class ReportCommand implements CommandExecutor {
 
 			String reason = "";
 
-			for (int i = 2; i < args.length; i++) {
+			for (int i = 4; i < args.length; i++) {
 				reason += " " + args[i];
 			}
 
