@@ -92,7 +92,7 @@ public class ReviewCommand implements CommandExecutor {
 				int page = 0;
 				
 				try {
-					page = Integer.parseInt(args[0]);
+					page = Integer.parseInt(args[0]) - 1;
 				} catch(NumberFormatException ex){
 					break pagination;
 				}
@@ -106,7 +106,7 @@ public class ReviewCommand implements CommandExecutor {
 				results[2] = ChatColor.GRAY + "" + ChatColor.ITALIC + "All dates are MM-dd-yyyy";
 
 				int sideI = 3;
-				for (int i = rowCount - page * 10; i > (rowCount <= 10 ? 0 : rowCount - 10); i--) {
+				for (int i = rowCount - page * 10; i > (rowCount - page * 10 <= 10 ? 0 : rowCount - page * 10 - 10); i--) {
 					Lists list = main.getDatabase().find(Lists.class).where().eq("id", i).findUnique();
 
 					if (list == null) {
