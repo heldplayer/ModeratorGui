@@ -66,7 +66,7 @@ public class ReviewCommand implements CommandExecutor {
 				case DEMOTE:
 					Demotions demote = main.getDatabase().find(Demotions.class).where().eq("id", id).findUnique();
 
-					results[sideI] = ChatColor.RED + "[X] " + ChatColor.AQUA + demote.getDemoted() + ChatColor.RED + ", by " + ChatColor.AQUA + demote.getDemoter() + ChatColor.RED + ", " + ChatColor.AQUA + demote.getPrevRank() + ChatColor.GREEN + " => " + ChatColor.AQUA + demote.getNewRank() + ChatColor.GREEN + " at " + ChatColor.AQUA + dateFormat.format(Long.valueOf(demote.getTimestamp())) + ChatColor.RED + ": " + demote.getReason();
+					results[sideI] = ChatColor.RED + "[X] " + ChatColor.AQUA + demote.getDemoted() + ChatColor.RED + ", by " + ChatColor.AQUA + demote.getDemoter() + ChatColor.RED + ", " + ChatColor.AQUA + demote.getPrevRank() + ChatColor.RED + " => " + ChatColor.AQUA + demote.getNewRank() + ChatColor.RED + " at " + ChatColor.AQUA + dateFormat.format(Long.valueOf(demote.getTimestamp())) + ChatColor.RED + ": " + demote.getReason();
 					break;
 				default:
 					results[sideI] = ChatColor.DARK_GRAY + "Unspecified action happened";
