@@ -39,19 +39,7 @@ public class ModeratorGui extends JavaPlugin {
 		
 		FileConfiguration config = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
 		
-		List<String> defaultRanks = new ArrayList<String>();
-		defaultRanks.add("default");
-		defaultRanks.add("mod");
-		defaultRanks.add("admin");
-		config.addDefault("ranks", defaultRanks);
-		
 		ranks = config.getStringList("ranks");
-		
-		try {
-			config.save(new File(this.getDataFolder(), "config.yml"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 		getCommand("report").setExecutor(new ReportCommand(this));
 
