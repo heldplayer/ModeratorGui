@@ -71,7 +71,7 @@ public class ReportCommand implements CommandExecutor {
 			main.getDatabase().save(issueRow);
 
 			Issues created = main.getDatabase().find(Issues.class).where().eq("timestamp", timeStamp).findUnique();
-			report(created.getId(), ReportType.ISSUE);
+			report(created.getId(), ReportType.ISSUE, sender.getName(), name);
 
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
@@ -121,7 +121,7 @@ public class ReportCommand implements CommandExecutor {
 			main.getDatabase().save(banRow);
 
 			Bans created = main.getDatabase().find(Bans.class).where().eq("timestamp", timeStamp).findUnique();
-			report(created.getId(), ReportType.BAN);
+			report(created.getId(), ReportType.BAN, sender.getName(), name);
 
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
@@ -172,7 +172,7 @@ public class ReportCommand implements CommandExecutor {
 			main.getDatabase().save(unbanRow);
 
 			Unbans created = main.getDatabase().find(Unbans.class).where().eq("timestamp", timeStamp).findUnique();
-			report(created.getId(), ReportType.UNBAN);
+			report(created.getId(), ReportType.UNBAN, sender.getName(), name);
 
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
@@ -277,7 +277,7 @@ public class ReportCommand implements CommandExecutor {
 			main.getDatabase().save(promotionRow);
 
 			Promotions created = main.getDatabase().find(Promotions.class).where().eq("timestamp", timeStamp).findUnique();
-			report(created.getId(), ReportType.PROMOTE);
+			report(created.getId(), ReportType.PROMOTE, sender.getName(), name);
 
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
@@ -382,7 +382,7 @@ public class ReportCommand implements CommandExecutor {
 			main.getDatabase().save(demotionRow);
 
 			Demotions created = main.getDatabase().find(Demotions.class).where().eq("timestamp", timeStamp).findUnique();
-			report(created.getId(), ReportType.DEMOTE);
+			report(created.getId(), ReportType.DEMOTE, sender.getName(), name);
 
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
@@ -400,7 +400,7 @@ public class ReportCommand implements CommandExecutor {
 				sender.sendMessage(ChatColor.GRAY + "/" + alias + " promote <playername> <oldrank> <newrank> <reason>");
 			if (sender.hasPermission("moderatorgui.demote"))
 				sender.sendMessage(ChatColor.GRAY + "/" + alias + " demote <playername> <oldrank> <newrank> <reason>");
-			
+
 			return true;
 		}
 
@@ -451,11 +451,13 @@ public class ReportCommand implements CommandExecutor {
 		return matched;
 	}
 
-	private void report(int id, ReportType type) {
+	private void report(int id, ReportType type, String reporter, String target) {
 		Lists listRow = new Lists();
 
 		listRow.setReportId(id);
 		listRow.setType(type.getId());
+		listRow.setReporter(reporter);
+		listRow.setTarget(reporter);
 
 		main.getDatabase().save(listRow);
 	}

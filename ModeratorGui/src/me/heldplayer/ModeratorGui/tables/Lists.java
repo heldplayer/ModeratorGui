@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotNull;
 
 @Entity()
@@ -18,6 +19,14 @@ public class Lists {
 
 	@NotNull
 	private int reportId;
+
+	@Length(max = 16)
+	@NotNull
+	private String reporter;
+
+	@Length(max = 16)
+	@NotNull
+	private String target;
 
 	public int getId() {
 		return id;
@@ -41,5 +50,21 @@ public class Lists {
 
 	public void setReportId(int reportId) {
 		this.reportId = reportId;
+	}
+
+	public String getReporter() {
+		return reporter;
+	}
+
+	public void setReporter(String reporter) {
+		this.reporter = reporter;
+	}
+
+	public String getTarget() {
+		return target;
+	}
+
+	public void setTarget(String target) {
+		this.target = target;
 	}
 }
