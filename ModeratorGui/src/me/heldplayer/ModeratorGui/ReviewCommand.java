@@ -25,10 +25,10 @@ public class ReviewCommand implements CommandExecutor {
 		if (args.length <= 0) {
 			int rowCount = main.getDatabase().find(Lists.class).findRowCount();
 
-			String[] results = new String[12];
+			String[] results = new String[Math.min(2, Math.min(10, rowCount + 2))];
 
 			results[0] = ChatColor.GRAY + "Types: " + ChatColor.YELLOW + "Issue " + ChatColor.DARK_RED + "Ban " + ChatColor.DARK_GREEN + "Unban " + ChatColor.RED + "Promote " + ChatColor.GREEN + "Demote";
-			results[1] = ChatColor.GRAY + "Current time: " + dateFormat.format(Long.valueOf(System.currentTimeMillis())) + ChatColor.ITALIC + "All times are MM-dd-yyyy HH:mm:ss";
+			results[1] = ChatColor.GRAY + "Current time: " + dateFormat.format(Long.valueOf(System.currentTimeMillis())) + ChatColor.ITALIC + " All times are MM-dd-yyyy HH:mm:ss";
 
 			int sideI = 2;
 			for (int i = rowCount; i > Math.max(rowCount - 10, rowCount); i--) {
