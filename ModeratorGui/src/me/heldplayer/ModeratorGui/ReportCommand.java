@@ -385,6 +385,14 @@ public class ReportCommand implements CommandExecutor {
 		List<String> matched = new ArrayList<String>();
 
 		for (OfflinePlayer player : players) {
+			if(player.getName().equalsIgnoreCase(name)){
+				matched.clear();
+				matched.add(player.getName());
+				return matched;
+			}
+			if(player.getName().length() < name.length()){
+				continue;
+			}
 			if (player.getName().substring(0, name.length()).equalsIgnoreCase(name)) {
 				matched.add(player.getName());
 			}
@@ -399,6 +407,14 @@ public class ReportCommand implements CommandExecutor {
 		List<String> matched = new ArrayList<String>();
 
 		for (String matchedRank : ranks) {
+			if(matchedRank.equalsIgnoreCase(rank)){
+				matched.clear();
+				matched.add(matchedRank);
+				return matched;
+			}
+			if(matchedRank.length() < rank.length()){
+				continue;
+			}
 			if (matchedRank.substring(0, rank.length()).equalsIgnoreCase(rank)) {
 				matched.add(matchedRank);
 			}
