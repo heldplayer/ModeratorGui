@@ -17,7 +17,7 @@ public class ReviewCommand implements CommandExecutor {
 	public ReviewCommand(ModeratorGui plugin) {
 		main = plugin;
 
-		dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
 	}
 
 	@Override
@@ -25,12 +25,13 @@ public class ReviewCommand implements CommandExecutor {
 		if (args.length <= 0) {
 			int rowCount = main.getDatabase().find(Lists.class).findRowCount();
 
-			String[] results = new String[Math.min(2, Math.min(10, rowCount + 2))];
+			String[] results = new String[Math.min(3, Math.min(10, rowCount + 2))];
 
 			results[0] = ChatColor.GRAY + "Types: " + ChatColor.YELLOW + "Issue " + ChatColor.DARK_RED + "Ban " + ChatColor.DARK_GREEN + "Unban " + ChatColor.RED + "Promote " + ChatColor.GREEN + "Demote";
-			results[1] = ChatColor.GRAY + "Current time: " + dateFormat.format(Long.valueOf(System.currentTimeMillis())) + ChatColor.ITALIC + " All times are MM-dd-yyyy HH:mm:ss";
+			results[1] = ChatColor.GRAY + "Current time: " + dateFormat.format(Long.valueOf(System.currentTimeMillis()));
+			results[1] = ChatColor.GRAY + "" + ChatColor.ITALIC + "All times are MM-dd-yyyy HH:mm:ss";
 
-			int sideI = 2;
+			int sideI = 3;
 			for (int i = rowCount; i > Math.max(rowCount - 10, rowCount); i--) {
 				Lists list = main.getDatabase().find(Lists.class).where().eq("id", i).findUnique();
 
