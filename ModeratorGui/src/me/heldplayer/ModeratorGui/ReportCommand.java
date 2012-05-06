@@ -389,17 +389,19 @@ public class ReportCommand implements CommandExecutor {
 			return true;
 		}
 
-		if (args[0].equalsIgnoreCase("demote")) {
+		if (args[0].equalsIgnoreCase("help")) {
 			if (sender.hasPermission("moderatorgui.issue"))
-				sender.sendMessage("/" + alias + " issue <playername> <issue>");
+				sender.sendMessage(ChatColor.GRAY + "/" + alias + " issue <playername> <issue>");
 			if (sender.hasPermission("moderatorgui.ban"))
-				sender.sendMessage("/" + alias + " ban <playername> <reason>");
+				sender.sendMessage(ChatColor.GRAY + "/" + alias + " ban <playername> <reason>");
 			if (sender.hasPermission("moderatorgui.unban"))
-				sender.sendMessage("/" + alias + " unban <playername> <reason>");
+				sender.sendMessage(ChatColor.GRAY + "/" + alias + " unban <playername> <reason>");
 			if (sender.hasPermission("moderatorgui.promote"))
-				sender.sendMessage("/" + alias + " promote <playername> <oldrank> <newrank> <reason>");
+				sender.sendMessage(ChatColor.GRAY + "/" + alias + " promote <playername> <oldrank> <newrank> <reason>");
 			if (sender.hasPermission("moderatorgui.demote"))
-				sender.sendMessage("/" + alias + " demote <playername> <oldrank> <newrank> <reason>");
+				sender.sendMessage(ChatColor.GRAY + "/" + alias + " demote <playername> <oldrank> <newrank> <reason>");
+			
+			return true;
 		}
 
 		return false;
