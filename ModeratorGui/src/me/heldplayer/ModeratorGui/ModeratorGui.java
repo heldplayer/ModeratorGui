@@ -1,5 +1,7 @@
 package me.heldplayer.ModeratorGui;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,8 @@ import me.heldplayer.ModeratorGui.tables.Issues;
 import me.heldplayer.ModeratorGui.tables.Promotions;
 import me.heldplayer.ModeratorGui.tables.Unbans;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,6 +22,7 @@ public class ModeratorGui extends JavaPlugin {
 
 	public static boolean isRunning = false;
 	public PluginDescriptionFile pdf;
+	public List<String> ranks;
 
 	@Override
 	public void onDisable() {
@@ -31,6 +36,22 @@ public class ModeratorGui extends JavaPlugin {
 		setupDatabase();
 
 		pdf = getDescription();
+		
+		FileConfiguration config = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
+		
+		List<String> defaultRanks = new ArrayList<String>();
+		defaultRanks.add("default");
+		defaultRanks.add("mod");
+		defaultRanks.add("admin");
+		config.addDefault("ranks", defaultRanks);
+		
+		ranks = config.getStringList("ranks");
+		
+		try {
+			config.save(new File(this.getDataFolder(), "config.yml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		getCommand("report").setExecutor(new ReportCommand(this));
 
