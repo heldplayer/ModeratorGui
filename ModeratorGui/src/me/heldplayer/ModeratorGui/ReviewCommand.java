@@ -25,7 +25,7 @@ public class ReviewCommand implements CommandExecutor {
 		if (args.length <= 0) {
 			int rowCount = main.getDatabase().find(Lists.class).findRowCount();
 
-			String[] results = new String[Math.max(3, Math.min(10, rowCount + 2))];
+			String[] results = new String[13];
 
 			results[0] = ChatColor.GRAY + "Types: " + ChatColor.YELLOW + "Issue " + ChatColor.DARK_RED + "Ban " + ChatColor.DARK_GREEN + "Unban " + ChatColor.RED + "Promote " + ChatColor.GREEN + "Demote";
 			results[1] = ChatColor.GRAY + "Current time: " + dateFormat.format(Long.valueOf(System.currentTimeMillis()));
@@ -75,8 +75,13 @@ public class ReviewCommand implements CommandExecutor {
 
 				sideI++;
 			}
-			
-			sender.sendMessage(results);
+
+			for (String result : results) {
+				try {
+					sender.sendMessage(result);
+				} catch (NullPointerException ex) {
+				}
+			}
 
 			return true;
 		}
