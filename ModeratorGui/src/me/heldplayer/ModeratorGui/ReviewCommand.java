@@ -32,7 +32,7 @@ public class ReviewCommand implements CommandExecutor {
 			results[2] = ChatColor.GRAY + "" + ChatColor.ITALIC + "All times are MM-dd-yyyy HH:mm:ss";
 
 			int sideI = 3;
-			for (int i = rowCount; i > Math.max(rowCount - 10, rowCount); i--) {
+			for (int i = rowCount; i > (rowCount <= 10 ? 0 : rowCount - 10); i--) {
 				Lists list = main.getDatabase().find(Lists.class).where().eq("id", i).findUnique();
 
 				if (list == null) {
@@ -77,10 +77,8 @@ public class ReviewCommand implements CommandExecutor {
 			}
 
 			for (String result : results) {
-				try {
+				if (result != null)
 					sender.sendMessage(result);
-				} catch (NullPointerException ex) {
-				}
 			}
 
 			return true;
