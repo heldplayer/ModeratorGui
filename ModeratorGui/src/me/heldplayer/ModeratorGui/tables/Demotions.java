@@ -26,6 +26,14 @@ public class Demotions {
 	@NotNull
 	private String reason;
 
+	@Length(max = 16)
+	@NotNull
+	private String prevRank;
+
+	@Length(max = 16)
+	@NotNull
+	private String newRank;
+
 	@NotNull
 	private long timestamp;
 
@@ -59,6 +67,22 @@ public class Demotions {
 
 	public void setReason(String reason) {
 		this.reason = reason;
+	}
+
+	public String getPrevRank() {
+		return prevRank;
+	}
+
+	public void setPrevRank(String prevRank) {
+		this.prevRank = prevRank;
+	}
+
+	public String getNewRank() {
+		return newRank;
+	}
+
+	public void setNewRank(String newRank) {
+		this.newRank = newRank;
 	}
 
 	public long getTimestamp() {
