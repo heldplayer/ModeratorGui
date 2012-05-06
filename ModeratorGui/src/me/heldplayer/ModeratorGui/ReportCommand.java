@@ -274,7 +274,7 @@ public class ReportCommand implements CommandExecutor {
 			return true;
 		}
 		
-		if (args[0].equalsIgnoreCase("promote") && args.length > 4 && sender.hasPermission("moderatorgui.demote")) {
+		if (args[0].equalsIgnoreCase("demote") && args.length > 4 && sender.hasPermission("moderatorgui.demote")) {
 			List<String> matchedNames = getPlayerMatches(args[1]);
 
 			String name = "";
