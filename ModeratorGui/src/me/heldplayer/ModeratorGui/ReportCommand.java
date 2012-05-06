@@ -457,7 +457,7 @@ public class ReportCommand implements CommandExecutor {
 		listRow.setReportId(id);
 		listRow.setType(type.getId());
 		listRow.setReporter(reporter);
-		listRow.setTarget(reporter);
+		listRow.setTarget(target);
 
 		main.getDatabase().save(listRow);
 	}
