@@ -24,7 +24,7 @@ public class ReportCommand implements CommandExecutor {
 		if (args.length <= 0) {
 			return false;
 		}
-		
+
 		long timeStamp = System.currentTimeMillis();
 
 		if (args[0].equalsIgnoreCase("issue") && args.length > 2 && sender.hasPermission("moderatorgui.issue")) {
@@ -69,7 +69,7 @@ public class ReportCommand implements CommandExecutor {
 			issueRow.setTimestamp(timeStamp);
 
 			main.getDatabase().save(issueRow);
-			
+
 			Issues created = main.getDatabase().find(Issues.class).where().eq("timestamp", timeStamp).findUnique();
 			report(created.getId(), ReportType.ISSUE);
 
@@ -119,7 +119,7 @@ public class ReportCommand implements CommandExecutor {
 			banRow.setTimestamp(timeStamp);
 
 			main.getDatabase().save(banRow);
-			
+
 			Bans created = main.getDatabase().find(Bans.class).where().eq("timestamp", timeStamp).findUnique();
 			report(created.getId(), ReportType.BAN);
 
@@ -170,7 +170,7 @@ public class ReportCommand implements CommandExecutor {
 			unbanRow.setTimestamp(timeStamp);
 
 			main.getDatabase().save(unbanRow);
-			
+
 			Unbans created = main.getDatabase().find(Unbans.class).where().eq("timestamp", timeStamp).findUnique();
 			report(created.getId(), ReportType.UNBAN);
 
@@ -275,7 +275,7 @@ public class ReportCommand implements CommandExecutor {
 			promotionRow.setTimestamp(timeStamp);
 
 			main.getDatabase().save(promotionRow);
-			
+
 			Promotions created = main.getDatabase().find(Promotions.class).where().eq("timestamp", timeStamp).findUnique();
 			report(created.getId(), ReportType.PROMOTE);
 
@@ -380,13 +380,26 @@ public class ReportCommand implements CommandExecutor {
 			demotionRow.setTimestamp(timeStamp);
 
 			main.getDatabase().save(demotionRow);
-			
+
 			Demotions created = main.getDatabase().find(Demotions.class).where().eq("timestamp", timeStamp).findUnique();
 			report(created.getId(), ReportType.DEMOTE);
 
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
 			return true;
+		}
+
+		if (args[0].equalsIgnoreCase("demote")) {
+			if (sender.hasPermission("moderatorgui.issue"))
+				sender.sendMessage("/" + alias + " issue <playername> <issue>");
+			if (sender.hasPermission("moderatorgui.ban"))
+				sender.sendMessage("/" + alias + " ban <playername> <reason>");
+			if (sender.hasPermission("moderatorgui.unban"))
+				sender.sendMessage("/" + alias + " unban <playername> <reason>");
+			if (sender.hasPermission("moderatorgui.promote"))
+				sender.sendMessage("/" + alias + " promote <playername> <oldrank> <newrank> <reason>");
+			if (sender.hasPermission("moderatorgui.demote"))
+				sender.sendMessage("/" + alias + " demote <playername> <oldrank> <newrank> <reason>");
 		}
 
 		return false;
@@ -438,10 +451,10 @@ public class ReportCommand implements CommandExecutor {
 
 	private void report(int id, ReportType type) {
 		Lists listRow = new Lists();
-		
+
 		listRow.setReportId(id);
 		listRow.setType(type.getId());
-		
+
 		main.getDatabase().save(listRow);
 	}
 }
