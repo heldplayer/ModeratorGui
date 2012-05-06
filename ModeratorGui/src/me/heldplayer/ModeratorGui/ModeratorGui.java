@@ -9,6 +9,7 @@ import javax.persistence.PersistenceException;
 import me.heldplayer.ModeratorGui.tables.Bans;
 import me.heldplayer.ModeratorGui.tables.Demotions;
 import me.heldplayer.ModeratorGui.tables.Issues;
+import me.heldplayer.ModeratorGui.tables.Lists;
 import me.heldplayer.ModeratorGui.tables.Promotions;
 import me.heldplayer.ModeratorGui.tables.Unbans;
 
@@ -54,6 +55,7 @@ public class ModeratorGui extends JavaPlugin {
 			getDatabase().find(Unbans.class).findRowCount();
 			getDatabase().find(Promotions.class).findRowCount();
 			getDatabase().find(Demotions.class).findRowCount();
+			getDatabase().find(Lists.class).findRowCount();
 		} catch (PersistenceException ex) {
 			getLogger().info("Installing database due to first time usage");
 			installDDL();
@@ -68,6 +70,7 @@ public class ModeratorGui extends JavaPlugin {
 		list.add(Unbans.class);
 		list.add(Promotions.class);
 		list.add(Demotions.class);
+		list.add(Lists.class);
 		return list;
 	}
 }
