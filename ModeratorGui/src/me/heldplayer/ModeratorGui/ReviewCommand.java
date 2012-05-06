@@ -17,7 +17,7 @@ public class ReviewCommand implements CommandExecutor {
 	public ReviewCommand(ModeratorGui plugin) {
 		main = plugin;
 
-		dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+		dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 	}
 
 	@Override
@@ -28,8 +28,8 @@ public class ReviewCommand implements CommandExecutor {
 			String[] results = new String[13];
 
 			results[0] = ChatColor.GRAY + "Types: " + ChatColor.YELLOW + "Issue " + ChatColor.DARK_RED + "Ban " + ChatColor.DARK_GREEN + "Unban " + ChatColor.GREEN + "Promote " + ChatColor.RED + "Demote";
-			results[1] = ChatColor.GRAY + "Current time: " + dateFormat.format(Long.valueOf(System.currentTimeMillis()));
-			results[2] = ChatColor.GRAY + "" + ChatColor.ITALIC + "All times are MM-dd-yyyy HH:mm:ss";
+			results[1] = ChatColor.GRAY + "Current date: " + dateFormat.format(Long.valueOf(System.currentTimeMillis()));
+			results[2] = ChatColor.GRAY + "" + ChatColor.ITALIC + "All dates are MM-dd-yyyy";
 
 			int sideI = 3;
 			for (int i = rowCount; i > (rowCount <= 10 ? 0 : rowCount - 10); i--) {
@@ -61,12 +61,12 @@ public class ReviewCommand implements CommandExecutor {
 				case PROMOTE:
 					Promotions promote = main.getDatabase().find(Promotions.class).where().eq("id", id).findUnique();
 
-					results[sideI] = ChatColor.GREEN + "[X] " + ChatColor.AQUA + promote.getPromoted() + ChatColor.GREEN + ", by " + ChatColor.AQUA + promote.getPromoter() + ChatColor.GREEN + " at " + ChatColor.AQUA + dateFormat.format(Long.valueOf(promote.getTimestamp())) + ChatColor.GREEN + ": " + promote.getReason();
+					results[sideI] = ChatColor.GREEN + "[X] " + ChatColor.AQUA + promote.getPromoted() + ChatColor.GREEN + ", by " + ChatColor.AQUA + promote.getPromoter() + ChatColor.GREEN + ", " + ChatColor.AQUA + promote.getPrevRank() + ChatColor.GREEN + " => " + ChatColor.AQUA + promote.getNewRank() + ChatColor.GREEN + " at " + ChatColor.AQUA + dateFormat.format(Long.valueOf(promote.getTimestamp())) + ChatColor.GREEN + ": " + promote.getReason();
 					break;
 				case DEMOTE:
 					Demotions demote = main.getDatabase().find(Demotions.class).where().eq("id", id).findUnique();
 
-					results[sideI] = ChatColor.RED + "[X] " + ChatColor.AQUA + demote.getDemoted() + ChatColor.RED + ", by " + ChatColor.AQUA + demote.getDemoter() + ChatColor.RED + " at " + ChatColor.AQUA + dateFormat.format(Long.valueOf(demote.getTimestamp())) + ChatColor.RED + ": " + demote.getReason();
+					results[sideI] = ChatColor.RED + "[X] " + ChatColor.AQUA + demote.getDemoted() + ChatColor.RED + ", by " + ChatColor.AQUA + demote.getDemoter() + ChatColor.RED + ", " + ChatColor.AQUA + demote.getPrevRank() + ChatColor.GREEN + " => " + ChatColor.AQUA + demote.getNewRank() + ChatColor.GREEN + " at " + ChatColor.AQUA + dateFormat.format(Long.valueOf(demote.getTimestamp())) + ChatColor.RED + ": " + demote.getReason();
 					break;
 				default:
 					results[sideI] = ChatColor.DARK_GRAY + "Unspecified action happened";
