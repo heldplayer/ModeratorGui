@@ -42,6 +42,10 @@ public class ModeratorGui extends JavaPlugin {
 	private void setupDatabase() {
 		try {
 			getDatabase().find(Issues.class).findRowCount();
+			getDatabase().find(Bans.class).findRowCount();
+			getDatabase().find(Unbans.class).findRowCount();
+			getDatabase().find(Promotions.class).findRowCount();
+			getDatabase().find(Demotions.class).findRowCount();
 		} catch (PersistenceException ex) {
 			getLogger().info("Installing database due to first time usage");
 			installDDL();
