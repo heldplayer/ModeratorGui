@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import me.heldplayer.ModeratorGui.WebGui.ThreadWebserver;
 import me.heldplayer.ModeratorGui.tables.Bans;
 import me.heldplayer.ModeratorGui.tables.Demotions;
 import me.heldplayer.ModeratorGui.tables.Issues;
@@ -20,13 +21,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class ModeratorGui extends JavaPlugin {
 
-	public static boolean isRunning = false;
 	public PluginDescriptionFile pdf;
 	public List<String> ranks;
+	private ThreadWebserver serverThread;
 
 	@Override
 	public void onDisable() {
-		isRunning = false;
+		serverThread.disconnect();
 
 		getLogger().info("Disabled!");
 	}
@@ -43,8 +44,8 @@ public class ModeratorGui extends JavaPlugin {
 
 		getCommand("report").setExecutor(new ReportCommand(this));
 		getCommand("review").setExecutor(new ReviewCommand(this));
-
-		isRunning = true;
+		
+		serverThread = new ThreadWebserver();
 
 		getLogger().info("Enabled!");
 	}
