@@ -24,6 +24,7 @@ public class ModeratorGui extends JavaPlugin {
 	public PluginDescriptionFile pdf;
 	public List<String> ranks;
 	private ThreadWebserver serverThread;
+	public static ModeratorGui instance;
 
 	@Override
 	public void onDisable() {
@@ -34,17 +35,19 @@ public class ModeratorGui extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		instance = this;
+		
 		setupDatabase();
 
 		pdf = getDescription();
-		
+
 		FileConfiguration config = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
-		
+
 		ranks = config.getStringList("ranks");
 
 		getCommand("report").setExecutor(new ReportCommand(this));
 		getCommand("review").setExecutor(new ReviewCommand(this));
-		
+
 		serverThread = new ThreadWebserver();
 
 		getLogger().info("Enabled!");
@@ -60,7 +63,11 @@ public class ModeratorGui extends JavaPlugin {
 			getDatabase().find(Lists.class).findRowCount();
 		} catch (PersistenceException ex) {
 			getLogger().info("Installing database due to first time usage");
-			installDDL();
+			try {
+				installDDL();
+			} catch (Exception ex2) {
+				getLogger().severe("Unable to set up the database!");
+			}
 		}
 	}
 

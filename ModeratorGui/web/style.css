@@ -1,0 +1,40 @@
+body {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 10pt;
+    margin: 0px;
+}
+
+#waiting {
+    display: none;
+}
+
+.visible#waiting {
+    display: block;
+}
+
+.visible#waiting .background {
+    z-index: 10002;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    left: 0px;
+    height: 100%;
+    background-color: black;
+    opacity: 0.8;
+}
+
+.visible#waiting .dialog {
+    z-index: 10003;
+    position: fixed;
+    top: 50%;
+    width: 400px;
+    left: 50%;
+    height: 100px;
+    margin-left: -202px;
+    margin-top: -52px;
+    background-color: #ddf;
+    border: 2px solid #aac;
+    text-align: center;
+    line-height: 100px;
+    vertical-align: middle;
+}

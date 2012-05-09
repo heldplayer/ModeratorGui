@@ -3,13 +3,22 @@ package me.heldplayer.ModeratorGui.WebGui;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashSet;
+import java.util.Random;
 
 public class ThreadWebserver extends Thread {
 	private ServerSocket serverSocket = null;
 	public boolean running = true;
+	public static ThreadWebserver instance;
+	private HashSet<String> sessions;
+	private Random rand;
 
 	public ThreadWebserver() {
 		super("ModeratorGui server thread");
+
+		instance = this;
+		sessions = new HashSet<String>();
+		rand = new Random();
 
 		this.setDaemon(true);
 		this.start();
@@ -21,6 +30,24 @@ public class ThreadWebserver extends Thread {
 			serverSocket.close();
 		} catch (IOException e) {
 		}
+	}
+
+	public String createSession() {
+		int response = rand.nextInt();
+		
+		String session = Integer.toHexString(response);
+		
+		if(sessions.contains(session)){
+			return null;
+		}
+		
+		sessions.add(session);
+		
+		return session;
+	}
+
+	public boolean sessionAllowed(String session) {
+		return sessions.contains(session);
 	}
 
 	@Override
@@ -40,9 +67,9 @@ public class ThreadWebserver extends Thread {
 		while (running) {
 			try {
 				Socket socket = serverSocket.accept();
-				
+
 				new ThreadHttpResponse(socket);
-				
+
 				Thread.sleep(10L);
 			} catch (IOException e) {
 			} catch (InterruptedException e) {

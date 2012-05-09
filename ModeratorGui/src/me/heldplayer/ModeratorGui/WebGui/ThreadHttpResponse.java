@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.TreeMap;
 
+import me.heldplayer.ModeratorGui.ModeratorGui;
 import me.heldplayer.ModeratorGui.WebGui.ErrorResponse.ErrorType;
 
 public class ThreadHttpResponse extends Thread {
@@ -82,10 +83,12 @@ public class ThreadHttpResponse extends Thread {
 				}
 
 				if (location.startsWith("/GENERATED/")) {
+					if (location.startsWith("/GENERATED/LOGIN/")) {
+						new LoginResponse(location.substring(11 + 6)).writeResponse(out, flags);
 
+						break main;
+					}
 				} else {
-					System.out.println("Requested: " + location);
-					
 					while (!(location.indexOf("..") < 0)) {
 						location = location.replaceAll("..", ".");
 					}
@@ -93,20 +96,18 @@ public class ThreadHttpResponse extends Thread {
 					if (location.endsWith("/")) {
 						location = location.concat("index.htm");
 					}
-					
-					System.out.println("Translated into: " + location);
-					
-					File root = new File(".");
-					File file = new File(root, location);
-					
-					System.out.println("Finally: " + file.getAbsolutePath());
+
+					File root = new File("web");
+					File file = new File(root, location).getAbsoluteFile();
 
 					if (file.isDirectory()) {
 						new ErrorResponse(ErrorType.Forbidden).writeResponse(out, flags);
 
 						break main;
 					} else if (file.exists()) {
-						
+						new FileResponse(file).writeResponse(out, flags);
+
+						break main;
 					} else {
 						new ErrorResponse(ErrorType.NotFound).writeResponse(out, flags);
 
