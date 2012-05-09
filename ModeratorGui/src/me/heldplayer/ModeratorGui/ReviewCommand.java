@@ -1,13 +1,16 @@
 package me.heldplayer.ModeratorGui;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
-import me.heldplayer.ModeratorGui.tables.*;
+import me.heldplayer.ModeratorGui.tables.Bans;
+import me.heldplayer.ModeratorGui.tables.Demotions;
+import me.heldplayer.ModeratorGui.tables.Issues;
+import me.heldplayer.ModeratorGui.tables.Lists;
+import me.heldplayer.ModeratorGui.tables.Promotions;
+import me.heldplayer.ModeratorGui.tables.Unbans;
 
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -159,7 +162,7 @@ public class ReviewCommand implements CommandExecutor {
 
 		if (args[0].equalsIgnoreCase("by")) {
 			if (args.length == 2) {
-				List<String> matchedNames = getPlayerMatches(args[1]);
+				List<String> matchedNames = ModeratorGui.getPlayerMatches(args[1]);
 
 				String name = "";
 
@@ -253,7 +256,7 @@ public class ReviewCommand implements CommandExecutor {
 						break pagination;
 					}
 
-					List<String> matchedNames = getPlayerMatches(args[1]);
+					List<String> matchedNames = ModeratorGui.getPlayerMatches(args[1]);
 
 					String name = "";
 
@@ -343,7 +346,7 @@ public class ReviewCommand implements CommandExecutor {
 
 		if (args[0].equalsIgnoreCase("target")) {
 			if (args.length == 2) {
-				List<String> matchedNames = getPlayerMatches(args[1]);
+				List<String> matchedNames = ModeratorGui.getPlayerMatches(args[1]);
 
 				String name = "";
 
@@ -438,7 +441,7 @@ public class ReviewCommand implements CommandExecutor {
 						break pagination;
 					}
 
-					List<String> matchedNames = getPlayerMatches(args[1]);
+					List<String> matchedNames = ModeratorGui.getPlayerMatches(args[1]);
 
 					String name = "";
 
@@ -535,27 +538,5 @@ public class ReviewCommand implements CommandExecutor {
 		}
 
 		return false;
-	}
-
-	private List<String> getPlayerMatches(String name) {
-		OfflinePlayer[] players = main.getServer().getOfflinePlayers();
-
-		List<String> matched = new ArrayList<String>();
-
-		for (OfflinePlayer player : players) {
-			if (player.getName().equalsIgnoreCase(name)) {
-				matched.clear();
-				matched.add(player.getName());
-				return matched;
-			}
-			if (player.getName().length() < name.length()) {
-				continue;
-			}
-			if (player.getName().substring(0, name.length()).equalsIgnoreCase(name)) {
-				matched.add(player.getName());
-			}
-		}
-
-		return matched;
 	}
 }

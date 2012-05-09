@@ -23,11 +23,11 @@ public class ReportedResponse extends WebResponse {
 
 		TreeMap<Integer, String> map = new TreeMap<Integer, String>();
 
-		map.put(i++, "{ type: \"promote\", reporter: \"" + request + "\", reported: \"hafnium\", time: \"Today\", reason: \"LOL SPAM => From 1 to 2\" }");
-		map.put(i++, "{ type: \"unban\", reporter: \"" + request + "\", reported: \"hafnium\", time: \"Today\", reason: \"LOL SPAM\" }");
-		map.put(i++, "{ type: \"ban\", reporter: \"" + request + "\", reported: \"hafnium\", time: \"Today\", reason: \"LOL SPAM\" }");
-		map.put(i++, "{ type: \"demote\", reporter: \"" + request + "\", reported: \"hafnium\", time: \"Today\", reason: \"LOL SPAM => From 2 to 1\" }");
-		map.put(i++, "{ type: \"issue\", reporter: \"" + request + "\", reported: \"hafnium\", time: \"Today\", reason: \"LOL SPAM\" }");
+		map.put(i++, "{ type: \"promote\", reported: \"" + request + "\", reporter: \"hafnium\", time: \"Today\", reason: \"LOL SPAM => From 1 to 2\" }");
+		map.put(i++, "{ type: \"unban\", reported: \"" + request + "\", reporter: \"hafnium\", time: \"Today\", reason: \"LOL SPAM\" }");
+		map.put(i++, "{ type: \"ban\", reported: \"" + request + "\", reporter: \"hafnium\", time: \"Today\", reason: \"LOL SPAM\" }");
+		map.put(i++, "{ type: \"demote\", reported: \"" + request + "\", reporter: \"hafnium\", time: \"Today\", reason: \"LOL SPAM => From 2 to 1\" }");
+		map.put(i++, "{ type: \"issue\", reported: \"" + request + "\", reporter: \"hafnium\", time: \"Today\", reason: \"LOL SPAM\" }");
 
 		String result = "[ ";
 		for (Integer I = 0; I < map.size(); I++) {

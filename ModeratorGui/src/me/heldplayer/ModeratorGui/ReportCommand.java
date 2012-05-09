@@ -1,12 +1,15 @@
 package me.heldplayer.ModeratorGui;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import me.heldplayer.ModeratorGui.tables.*;
+import me.heldplayer.ModeratorGui.tables.Bans;
+import me.heldplayer.ModeratorGui.tables.Demotions;
+import me.heldplayer.ModeratorGui.tables.Issues;
+import me.heldplayer.ModeratorGui.tables.Lists;
+import me.heldplayer.ModeratorGui.tables.Promotions;
+import me.heldplayer.ModeratorGui.tables.Unbans;
 
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,7 +31,7 @@ public class ReportCommand implements CommandExecutor {
 		long timeStamp = System.currentTimeMillis();
 
 		if (args[0].equalsIgnoreCase("issue") && args.length > 2 && sender.hasPermission("moderatorgui.issue")) {
-			List<String> matchedNames = getPlayerMatches(args[1]);
+			List<String> matchedNames = ModeratorGui.getPlayerMatches(args[1]);
 
 			String name = "";
 
@@ -79,7 +82,7 @@ public class ReportCommand implements CommandExecutor {
 		}
 
 		if (args[0].equalsIgnoreCase("ban") && args.length > 2 && sender.hasPermission("moderatorgui.ban")) {
-			List<String> matchedNames = getPlayerMatches(args[1]);
+			List<String> matchedNames = ModeratorGui.getPlayerMatches(args[1]);
 
 			String name = "";
 
@@ -129,7 +132,7 @@ public class ReportCommand implements CommandExecutor {
 		}
 
 		if (args[0].equalsIgnoreCase("unban") && args.length > 2 && sender.hasPermission("moderatorgui.unban")) {
-			List<String> matchedNames = getPlayerMatches(args[1]);
+			List<String> matchedNames = ModeratorGui.getPlayerMatches(args[1]);
 
 			String name = "";
 
@@ -180,7 +183,7 @@ public class ReportCommand implements CommandExecutor {
 		}
 
 		if (args[0].equalsIgnoreCase("promote") && args.length > 4 && sender.hasPermission("moderatorgui.promote")) {
-			List<String> matchedNames = getPlayerMatches(args[1]);
+			List<String> matchedNames = ModeratorGui.getPlayerMatches(args[1]);
 
 			String name = "";
 
@@ -206,7 +209,7 @@ public class ReportCommand implements CommandExecutor {
 				return true;
 			}
 
-			List<String> matchedRanks1 = getRankMatches(args[2]);
+			List<String> matchedRanks1 = ModeratorGui.getRankMatches(args[2]);
 
 			String rank1 = "";
 
@@ -232,7 +235,7 @@ public class ReportCommand implements CommandExecutor {
 				return true;
 			}
 
-			List<String> matchedRanks2 = getRankMatches(args[3]);
+			List<String> matchedRanks2 = ModeratorGui.getRankMatches(args[3]);
 
 			String rank2 = "";
 
@@ -285,7 +288,7 @@ public class ReportCommand implements CommandExecutor {
 		}
 
 		if (args[0].equalsIgnoreCase("demote") && args.length > 4 && sender.hasPermission("moderatorgui.demote")) {
-			List<String> matchedNames = getPlayerMatches(args[1]);
+			List<String> matchedNames = ModeratorGui.getPlayerMatches(args[1]);
 
 			String name = "";
 
@@ -311,7 +314,7 @@ public class ReportCommand implements CommandExecutor {
 				return true;
 			}
 
-			List<String> matchedRanks1 = getRankMatches(args[2]);
+			List<String> matchedRanks1 = ModeratorGui.getRankMatches(args[2]);
 
 			String rank1 = "";
 
@@ -337,7 +340,7 @@ public class ReportCommand implements CommandExecutor {
 				return true;
 			}
 
-			List<String> matchedRanks2 = getRankMatches(args[3]);
+			List<String> matchedRanks2 = ModeratorGui.getRankMatches(args[3]);
 
 			String rank2 = "";
 
@@ -405,50 +408,6 @@ public class ReportCommand implements CommandExecutor {
 		}
 
 		return false;
-	}
-
-	private List<String> getPlayerMatches(String name) {
-		OfflinePlayer[] players = main.getServer().getOfflinePlayers();
-
-		List<String> matched = new ArrayList<String>();
-
-		for (OfflinePlayer player : players) {
-			if (player.getName().equalsIgnoreCase(name)) {
-				matched.clear();
-				matched.add(player.getName());
-				return matched;
-			}
-			if (player.getName().length() < name.length()) {
-				continue;
-			}
-			if (player.getName().substring(0, name.length()).equalsIgnoreCase(name)) {
-				matched.add(player.getName());
-			}
-		}
-
-		return matched;
-	}
-
-	private List<String> getRankMatches(String rank) {
-		List<String> ranks = main.ranks;
-
-		List<String> matched = new ArrayList<String>();
-
-		for (String matchedRank : ranks) {
-			if (matchedRank.equalsIgnoreCase(rank)) {
-				matched.clear();
-				matched.add(matchedRank);
-				return matched;
-			}
-			if (matchedRank.length() < rank.length()) {
-				continue;
-			}
-			if (matchedRank.substring(0, rank.length()).equalsIgnoreCase(rank)) {
-				matched.add(matchedRank);
-			}
-		}
-
-		return matched;
 	}
 
 	private void report(int id, ReportType type, String reporter, String target) {
