@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.TreeMap;
 
-import me.heldplayer.ModeratorGui.ModeratorGui;
 import me.heldplayer.ModeratorGui.WebGui.ErrorResponse.ErrorType;
 
 public class ThreadHttpResponse extends Thread {
@@ -85,6 +84,16 @@ public class ThreadHttpResponse extends Thread {
 				if (location.startsWith("/GENERATED/")) {
 					if (location.startsWith("/GENERATED/LOGIN/")) {
 						new LoginResponse(location.substring(11 + 6)).writeResponse(out, flags);
+
+						break main;
+					}
+					if (location.startsWith("/GENERATED/REPORTER/")) {
+						new ReporterResponse(location.substring(11 + 9)).writeResponse(out, flags);
+
+						break main;
+					}
+					if (location.startsWith("/GENERATED/REPORTED/")) {
+						new ReportedResponse(location.substring(11 + 9)).writeResponse(out, flags);
 
 						break main;
 					}

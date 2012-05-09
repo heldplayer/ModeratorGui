@@ -1,40 +1,94 @@
 body {
-    font-family: "Courier New", Courier, monospace;
-    font-size: 10pt;
-    margin: 0px;
+	font-family: "Courier New", Courier, monospace;
+	font-size: 10pt;
+	margin: 0px;
+	background-color: #cce;
 }
 
 #waiting {
-    display: none;
+	display: none;
 }
 
 .visible#waiting {
-    display: block;
+	display: block;
 }
 
 .visible#waiting .background {
-    z-index: 10002;
-    position: fixed;
-    top: 0px;
-    width: 100%;
-    left: 0px;
-    height: 100%;
-    background-color: black;
-    opacity: 0.8;
+	z-index: 10002;
+	position: fixed;
+	top: 0px;
+	width: 100%;
+	left: 0px;
+	height: 100%;
+	background-color: black;
+	opacity: 0.8;
 }
 
 .visible#waiting .dialog {
-    z-index: 10003;
-    position: fixed;
-    top: 50%;
-    width: 400px;
-    left: 50%;
-    height: 100px;
-    margin-left: -202px;
-    margin-top: -52px;
-    background-color: #ddf;
-    border: 2px solid #aac;
-    text-align: center;
-    line-height: 100px;
-    vertical-align: middle;
+	z-index: 10003;
+	position: fixed;
+	top: 50%;
+	width: 400px;
+	left: 50%;
+	height: 100px;
+	margin-left: -202px;
+	margin-top: -52px;
+	background-color: #ddf;
+	border: 2px solid #aac;
+	text-align: center;
+	line-height: 100px;
+	vertical-align: middle;
+}
+
+.searchbar {
+	height: 30px;
+	background-color: #ddf;
+	border-bottom: 2px solid #aac;
+	line-height: 30px;
+	vertical-align: middle;
+}
+
+.searchbar button {
+	line-height: 20px;
+}
+
+#side {
+	float: right;
+}
+
+.report {
+	width: 100%;
+	border-bottom: 1px solid #99b;
+	transition: background-color 1s;
+	-moz-transition: background-color 1s;
+	-webkit-transition: background-color 1s;
+	-o-transition: background-color 1s;
+}
+
+.second {
+	background-color: #779;
+}
+
+.report:hover {
+	background-color: #557;
+}
+
+.issue {
+	color: #ffff55;
+}
+
+.demote {
+	color: #ff5555;
+}
+
+.promote {
+	color: #55ff55;
+}
+
+.ban {
+	color: #aa0000;
+}
+
+.unban {
+	color: #00aa00;
 }

@@ -6,9 +6,23 @@
 <script type="text/javascript" src="./script.js"></script>
 </head>
 <body onload="init();">
-<div id="waiting" class="visible">
-<div class="background"></div>
-<div class="dialog" id="message">Waiting for the page to load, hold on...</div>
-</div>
+	<div id="waiting" class="visible">
+		<!-- The semi-transparent screen blocker -->
+		<div class="background"></div>
+		<!-- The dialog box used to display messages -->
+		<div class="dialog" id="dialog">Waiting for the page to load,
+			hold on...</div>
+	</div>
+	<div class="searchbar">
+		<!-- Username to query -->
+		Username: <input type="text" id="username" />
+		<!-- If you want to query who reported something -->
+		<button onclick="findReporter();">Find by reporter</button>
+		<!-- If you want to query who was reported -->
+		<button onclick="findReported();">Find by reported</button>
+		<!-- Side display -->
+		<span id="side"></span>
+	</div>
+	<div id="content"></div>
 </body>
 </html>
