@@ -63,6 +63,8 @@ body {
 	-moz-transition: background-color 1s;
 	-webkit-transition: background-color 1s;
 	-o-transition: background-color 1s;
+	line-height: 16px;
+	text-shadow: 0px 0px 5px black;
 }
 
 .second {
@@ -71,6 +73,7 @@ body {
 
 .report:hover {
 	background-color: #557;
+	line-height: 20px;
 }
 
 .issue {

@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.TreeMap;
 
+import me.heldplayer.ModeratorGui.ModeratorGui;
 import me.heldplayer.ModeratorGui.WebGui.ErrorResponse.ErrorType;
 
 public class ThreadHttpResponse extends Thread {
@@ -60,8 +61,6 @@ public class ThreadHttpResponse extends Thread {
 					break main;
 				}
 
-				System.out.println("Recieved request from " + socket.getInetAddress().getHostName());
-
 				String[] split = input.get(0).split(" ");
 				String method = split[0];
 				String location = split[1];
@@ -76,7 +75,7 @@ public class ThreadHttpResponse extends Thread {
 				}
 
 				if (!version.split("/")[1].equalsIgnoreCase("1.0") && !version.split("/")[1].equalsIgnoreCase("1.1")) {
-					new ErrorResponse(ErrorType.NotImplemented).writeResponse(out, flags);
+					new ErrorResponse(ErrorType.HTTPVersionNotSupported).writeResponse(out, flags);
 
 					break main;
 				}
@@ -88,14 +87,30 @@ public class ThreadHttpResponse extends Thread {
 						break main;
 					}
 					if (location.startsWith("/GENERATED/REPORTER/")) {
-						new ReporterResponse(location.substring(11 + 9)).writeResponse(out, flags);
+						String[] sepperated = location.substring(11 + 9).split("/", 2);
 
-						break main;
+						if (ThreadWebserver.instance.sessionAllowed(sepperated[0])) {
+							new ReporterResponse(sepperated[1]).writeResponse(out, flags);
+
+							break main;
+						} else {
+							new ErrorResponse(ErrorType.Forbidden).writeResponse(out, flags);
+
+							break main;
+						}
 					}
 					if (location.startsWith("/GENERATED/REPORTED/")) {
-						new ReportedResponse(location.substring(11 + 9)).writeResponse(out, flags);
+						String[] sepperated = location.substring(11 + 9).split("/", 2);
 
-						break main;
+						if (ThreadWebserver.instance.sessionAllowed(sepperated[0])) {
+							new ReportedResponse(sepperated[1]).writeResponse(out, flags);
+
+							break main;
+						} else {
+							new ErrorResponse(ErrorType.Forbidden).writeResponse(out, flags);
+
+							break main;
+						}
 					}
 				} else {
 					while (!(location.indexOf("..") < 0)) {
@@ -106,7 +121,7 @@ public class ThreadHttpResponse extends Thread {
 						location = location.concat("index.htm");
 					}
 
-					File root = new File("web");
+					File root = new File(ModeratorGui.instance.getDataFolder(), "web");
 					File file = new File(root, location).getAbsoluteFile();
 
 					if (file.isDirectory()) {
@@ -132,7 +147,6 @@ public class ThreadHttpResponse extends Thread {
 				try {
 					new ErrorResponse(ErrorType.InternalServerError).writeResponse(out, flags);
 				} catch (IOException e) {
-					e.printStackTrace();
 				}
 			} finally {
 				try {

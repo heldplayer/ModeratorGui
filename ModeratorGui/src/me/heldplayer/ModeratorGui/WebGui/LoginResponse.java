@@ -3,6 +3,8 @@ package me.heldplayer.ModeratorGui.WebGui;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import me.heldplayer.ModeratorGui.ModeratorGui;
+
 public class LoginResponse extends WebResponse {
 	private String request;
 
@@ -18,8 +20,7 @@ public class LoginResponse extends WebResponse {
 		stream.writeBytes("Content-Type: text/plain\r\n");
 		stream.writeBytes("\r\n");
 
-		//if (request.equals(ModeratorGui.instance.getConfig().getString("web-password"))) {
-		if (request.equals("Testificate")) {
+		if (request.equals(ModeratorGui.instance.getConfig().getString("web-password"))) {
 			String session = ThreadWebserver.instance.createSession();
 
 			stream.writeBytes(session);
