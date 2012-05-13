@@ -86,6 +86,19 @@ public class ThreadHttpResponse extends Thread {
 
 						break main;
 					}
+					if (location.startsWith("/GENERATED/LIST/")) {
+						String session = location.substring(11 + 5);
+
+						if (ThreadWebserver.instance.sessionAllowed(session)) {
+							new ListResponse().writeResponse(out, flags);
+
+							break main;
+						} else {
+							new ErrorResponse(ErrorType.Forbidden).writeResponse(out, flags);
+
+							break main;
+						}
+					}
 					if (location.startsWith("/GENERATED/REPORTER/")) {
 						String[] sepperated = location.substring(11 + 9).split("/", 2);
 
