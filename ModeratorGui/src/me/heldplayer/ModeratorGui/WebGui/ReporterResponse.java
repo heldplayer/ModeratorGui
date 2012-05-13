@@ -37,7 +37,7 @@ public class ReporterResponse extends WebResponse {
 
 		TreeMap<Integer, String> map = new TreeMap<Integer, String>();
 
-		List<Lists> lists = ModeratorGui.instance.getDatabase().find(Lists.class).where().like("reporter", request + "%").setMaxRows(10).orderBy("id DESC").findList();
+		List<Lists> lists = ModeratorGui.instance.getDatabase().find(Lists.class).where().like("reporter", request + "%").setMaxRows(500).orderBy("id DESC").findList();
 
 		for (Lists list : lists) {
 			int id = list.getReportId();
