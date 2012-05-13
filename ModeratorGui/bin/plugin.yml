@@ -1,6 +1,6 @@
 name: ModeratorGui
 main: me.heldplayer.ModeratorGui.ModeratorGui
-version: 0.1
+version: 1.0
 author: heldplayer
 description: Plugin for server moderation
 database: true
