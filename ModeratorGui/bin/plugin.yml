@@ -24,8 +24,9 @@ permissions:
       moderatorgui.unban: true
       moderatorgui.promote: true
       moderatorgui.demote: true
+      moderatorgui.review: true
   moderatorgui.command:
-    description: Allows using the report command
+    description: Allows using the plugin commands
   moderatorgui.issue:
     description: Allows reporting issues with players
   moderatorgui.ban:
@@ -36,3 +37,5 @@ permissions:
     description: Allows reporting promotions
   moderatorgui.demote:
     description: Allows reporting demotions
+  moderatorgui.review:
+    description: Allows reviewing reports

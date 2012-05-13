@@ -28,6 +28,11 @@ public class ReviewCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
+		if (!sender.hasPermission("moderatorgui.review")) {
+			sender.sendMessage(ChatColor.RED + "You don't have permissions for this!");
+			return true;
+		}
+
 		if (args.length <= 0) {
 			String[] results = new String[13];
 
@@ -36,7 +41,7 @@ public class ReviewCommand implements CommandExecutor {
 			results[2] = ChatColor.GRAY + "" + ChatColor.ITALIC + "All dates are MM-dd-yyyy";
 
 			List<Lists> lists = main.getDatabase().find(Lists.class).setMaxRows(10).orderBy("id DESC").findList();
-			
+
 			int sideI = 3;
 			for (Lists list : lists) {
 				if (list == null) {
@@ -105,9 +110,9 @@ public class ReviewCommand implements CommandExecutor {
 				results[2] = ChatColor.GRAY + "" + ChatColor.ITALIC + "All dates are MM-dd-yyyy";
 
 				int sideI = 3;
-				
+
 				List<Lists> lists = main.getDatabase().find(Lists.class).setMaxRows(10).setFirstRow(page * 10).orderBy("id DESC").findList();
-				
+
 				for (Lists list : lists) {
 
 					if (list == null) {
@@ -195,9 +200,9 @@ public class ReviewCommand implements CommandExecutor {
 				results[2] = ChatColor.GRAY + "" + ChatColor.ITALIC + "All dates are MM-dd-yyyy";
 
 				int sideI = 3;
-				
+
 				List<Lists> lists = main.getDatabase().find(Lists.class).where().eq("reporter", name).setMaxRows(10).orderBy("id DESC").findList();
-				
+
 				for (Lists list : lists) {
 					if (list == null) {
 						continue;
@@ -289,9 +294,9 @@ public class ReviewCommand implements CommandExecutor {
 					results[2] = ChatColor.GRAY + "" + ChatColor.ITALIC + "All dates are MM-dd-yyyy";
 
 					int sideI = 3;
-					
+
 					List<Lists> lists = main.getDatabase().find(Lists.class).where().eq("reporter", name).setMaxRows(10).setFirstRow(page * 10).orderBy("id DESC").findList();
-					
+
 					for (Lists list : lists) {
 						if (list == null) {
 							continue;
@@ -379,9 +384,9 @@ public class ReviewCommand implements CommandExecutor {
 				results[2] = ChatColor.GRAY + "" + ChatColor.ITALIC + "All dates are MM-dd-yyyy";
 
 				int sideI = 3;
-				
+
 				List<Lists> lists = main.getDatabase().find(Lists.class).where().eq("target", name).setMaxRows(10).orderBy("id DESC").findList();
-				
+
 				for (Lists list : lists) {
 					if (list == null) {
 						continue;
@@ -474,9 +479,9 @@ public class ReviewCommand implements CommandExecutor {
 					results[2] = ChatColor.GRAY + "" + ChatColor.ITALIC + "All dates are MM-dd-yyyy";
 
 					int sideI = 3;
-					
+
 					List<Lists> lists = main.getDatabase().find(Lists.class).where().eq("target", name).setMaxRows(10).setFirstRow(page * 10).orderBy("id DESC").findList();
-					
+
 					for (Lists list : lists) {
 						if (list == null) {
 							continue;
@@ -528,7 +533,7 @@ public class ReviewCommand implements CommandExecutor {
 				}
 			}
 		}
-		
+
 		if (args[0].equalsIgnoreCase("help")) {
 			sender.sendMessage(ChatColor.GRAY + "/" + alias + " [page]");
 			sender.sendMessage(ChatColor.GRAY + "/" + alias + " by <playername> [page]");
