@@ -242,7 +242,7 @@ public class ReportCommand implements CommandExecutor {
 			if (matchedRanks2.size() == 1) {
 				rank2 = matchedRanks2.get(0);
 			} else if (matchedRanks2.size() == 0) {
-				sender.sendMessage(ChatColor.RED + "No match found for '" + args[2] + "'");
+				sender.sendMessage(ChatColor.RED + "No match found for '" + args[3] + "'");
 
 				return true;
 			} else {
@@ -347,7 +347,7 @@ public class ReportCommand implements CommandExecutor {
 			if (matchedRanks2.size() == 1) {
 				rank2 = matchedRanks2.get(0);
 			} else if (matchedRanks2.size() == 0) {
-				sender.sendMessage(ChatColor.RED + "No match found for '" + args[2] + "'");
+				sender.sendMessage(ChatColor.RED + "No match found for '" + args[3] + "'");
 
 				return true;
 			} else {
