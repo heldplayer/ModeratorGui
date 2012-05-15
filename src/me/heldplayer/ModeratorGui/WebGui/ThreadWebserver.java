@@ -1,10 +1,13 @@
 package me.heldplayer.ModeratorGui.WebGui;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
 import java.util.Random;
+
+import me.heldplayer.ModeratorGui.ModeratorGui;
 
 public class ThreadWebserver extends Thread {
 	private ServerSocket serverSocket = null;
@@ -12,13 +15,17 @@ public class ThreadWebserver extends Thread {
 	public static ThreadWebserver instance;
 	private HashSet<String> sessions;
 	private Random rand;
+	private final int port;
+	private final String host;
 
-	public ThreadWebserver() {
+	public ThreadWebserver(int port, String host) {
 		super("ModeratorGui server thread");
 
 		instance = this;
 		sessions = new HashSet<String>();
 		rand = new Random();
+		this.port = port;
+		this.host = host;
 
 		this.setDaemon(true);
 		this.start();
@@ -34,15 +41,15 @@ public class ThreadWebserver extends Thread {
 
 	public String createSession() {
 		int response = rand.nextInt();
-		
+
 		String session = Integer.toHexString(response);
-		
-		if(sessions.contains(session)){
+
+		if (sessions.contains(session)) {
 			return null;
 		}
-		
+
 		sessions.add(session);
-		
+
 		return session;
 	}
 
@@ -53,16 +60,21 @@ public class ThreadWebserver extends Thread {
 	@Override
 	public void run() {
 		try {
-			System.out.println("Binding to port 8273...");
+			ModeratorGui.instance.getLogger().info("Starting server on " + (host != "" ? host : "*") + ":" + port);
 
-			serverSocket = new ServerSocket(8273);
+			InetAddress adress = null;
+
+			if (host.length() > 0) {
+				InetAddress.getByName(host);
+			}
+
+			serverSocket = new ServerSocket(port, 0, adress);
 		} catch (Exception ex) {
-			System.err.println("Fatal error: " + ex.getMessage());
-			ex.printStackTrace();
+			ModeratorGui.instance.getLogger().severe("**** FAILED TO BIND TO PORT");
+			ModeratorGui.instance.getLogger().severe("The exception was: " + ex.toString());
+			ModeratorGui.instance.getLogger().severe("Perhaps a server is already running on that port?");
 			return;
 		}
-
-		System.out.println("Port bound!");
 
 		while (running) {
 			try {

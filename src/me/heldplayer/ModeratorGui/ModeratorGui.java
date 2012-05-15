@@ -1,6 +1,5 @@
 package me.heldplayer.ModeratorGui;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import me.heldplayer.ModeratorGui.tables.Unbans;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -37,19 +35,21 @@ public class ModeratorGui extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		instance = this;
-		
+
 		setupDatabase();
 
 		pdf = getDescription();
 
-		FileConfiguration config = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), "config.yml"));
+		FileConfiguration config = getConfig();
 
 		ranks = config.getStringList("ranks");
 
 		getCommand("report").setExecutor(new ReportCommand(this));
 		getCommand("review").setExecutor(new ReviewCommand(this));
 
-		serverThread = new ThreadWebserver();
+		serverThread = new ThreadWebserver(config.getInt("port", 8273), config.getString("host", ""));
+
+		saveConfig();
 
 		getLogger().info("Enabled!");
 	}
@@ -83,7 +83,7 @@ public class ModeratorGui extends JavaPlugin {
 		list.add(Lists.class);
 		return list;
 	}
-	
+
 	public static List<String> getPlayerMatches(String name) {
 		OfflinePlayer[] players = instance.getServer().getOfflinePlayers();
 
@@ -106,7 +106,7 @@ public class ModeratorGui extends JavaPlugin {
 		return matched;
 	}
 
-	public static  List<String> getRankMatches(String rank) {
+	public static List<String> getRankMatches(String rank) {
 		List<String> ranks = instance.ranks;
 
 		List<String> matched = new ArrayList<String>();
