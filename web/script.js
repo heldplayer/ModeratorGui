@@ -34,12 +34,12 @@ function displayList() {
 	} else {
 		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	xmlhttp.open("GET", "/GENERATED/LIST/" + session, false);
+	xmlhttp
+			.open("GET", "/GENERATED/LIST/" + session + getRequestFlags() + "/", false);
 	xmlhttp.send();
 
 	if (xmlhttp.status != 200) {
-		document.getElementById("side").innerText = "Error: " + xmlhttp.status
-				+ " - " + xmlhttp.statusText;
+		document.getElementById("side").innerText = "Error: " + xmlhttp.status + " - " + xmlhttp.statusText;
 		document.getElementById("waiting").setAttribute("class", "");
 		return;
 	}
@@ -49,8 +49,7 @@ function displayList() {
 
 		outputData(data);
 
-		document.getElementById("side").innerText = "Displaying " + data.length
-				+ " items";
+		document.getElementById("side").innerText = "Displaying " + data.length + " items";
 
 		document.getElementById("waiting").setAttribute("class", "");
 
@@ -73,13 +72,13 @@ function findReporter() {
 	} else {
 		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	xmlhttp.open("GET", "/GENERATED/REPORTER/" + session + "/"
-			+ document.getElementById("username").value, false);
+	xmlhttp
+			.open("GET", "/GENERATED/REPORTER/" + session + "/" + getRequestFlags() + "/" + document
+					.getElementById("username").value, false);
 	xmlhttp.send();
 
 	if (xmlhttp.status != 200) {
-		document.getElementById("side").innerText = "Error: " + xmlhttp.status
-				+ " - " + xmlhttp.statusText;
+		document.getElementById("side").innerText = "Error: " + xmlhttp.status + " - " + xmlhttp.statusText;
 		document.getElementById("waiting").setAttribute("class", "");
 		return;
 	}
@@ -89,8 +88,7 @@ function findReporter() {
 
 		outputData(data);
 
-		document.getElementById("side").innerText = "Displaying " + data.length
-				+ " items";
+		document.getElementById("side").innerText = "Displaying " + data.length + " items";
 
 		document.getElementById("waiting").setAttribute("class", "");
 
@@ -111,13 +109,14 @@ function findReported() {
 	} else {
 		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
-	xmlhttp.open("GET", "/GENERATED/REPORTED/" + session + "/"
-			+ document.getElementById("username").value, false);
+
+	xmlhttp
+			.open("GET", "/GENERATED/REPORTED/" + session + "/" + getRequestFlags() + "/" + document
+					.getElementById("username").value, false);
 	xmlhttp.send();
 
 	if (xmlhttp.status != 200) {
-		document.getElementById("side").innerText = "Error: " + xmlhttp.status
-				+ " - " + xmlhttp.statusText;
+		document.getElementById("side").innerText = "Error: " + xmlhttp.status + " - " + xmlhttp.statusText;
 		document.getElementById("waiting").setAttribute("class", "");
 		return;
 	}
@@ -127,8 +126,7 @@ function findReported() {
 
 		outputData(data);
 
-		document.getElementById("side").innerText = "Displaying " + data.length
-				+ " items";
+		document.getElementById("side").innerText = "Displaying " + data.length + " items";
 
 		document.getElementById("waiting").setAttribute("class", "");
 
@@ -144,29 +142,40 @@ function outputData(data) {
 	for ( var i = 0; i < data.length; i++) {
 		var row = data[i];
 
-		var element = document.createElement("div");
+		var element = document.createElement("tr");
 
-		element.setAttribute("class", "report " + row["type"]
-				+ (i % 2 == 0 ? "" : " second"));
+		element
+				.setAttribute("class", "report " + row["type"] + (i % 2 == 0 ? "" : " second"));
 
-		element.innerHTML = row["type"] + ", <span class=\"reported\">"
-				+ row["reported"] + "</span>: <span class=\"reason\">"
-				+ row["reason"] + "</span>";
-		element.innerHTML += "<br/><span class=\"reporter\">By "
-				+ row["reporter"] + "</span> <span class=\"time\">"
-				+ row["time"] + "</span> ";
+		element.innerHTML = "<td class=\"type\">" + row["type"] + "</td>";
+		element.innerHTML += "<td class=\"reporter\">" + row["reporter"] + "</td>";
+		element.innerHTML += "<td class=\"reported\">" + row["reported"] + "</td>";
+		element.innerHTML += "<td class=\"reason\">" + row["reason"] + "</td>";
+		element.innerHTML += "<td class=\"time\">" + row["time"] + "</td>";
 
 		if (row["type"] == "promote") {
-			element.innerHTML += "Promoted from <span class=\"from\">"
-					+ row["prev"] + "</span> to <span class=\"to\">"
-					+ row["new"] + "</span>";
-		}
-		if (row["type"] == "demote") {
-			element.innerHTML += "Demoted from <span class=\"from\">"
-					+ row["prev"] + "</span> to <span class=\"to\">"
-					+ row["new"] + "</span>";
+			element.innerHTML += "<td class=\"prev\">" + row["prev"] + "</td>";
+			element.innerHTML += "<td class=\"new\">" + row["new"] + "</td>";
+		} else if (row["type"] == "demote") {
+			element.innerHTML += "<td class=\"prev\">" + row["prev"] + "</td>";
+			element.innerHTML += "<td class=\"new\">" + row["new"] + "</td>";
+		} else {
+			element.innerHTML += "<td class=\"from\">N/A</td>";
+			element.innerHTML += "<td class=\"to\">N/A</td>";
 		}
 
 		document.getElementById("content").appendChild(element);
 	}
+}
+
+function getRequestFlags() {
+	var flags = "";
+
+	flags += (document.getElementById("issues").checked ? "i" : "");
+	flags += (document.getElementById("promotions").checked ? "p" : "");
+	flags += (document.getElementById("demotions").checked ? "d" : "");
+	flags += (document.getElementById("bans").checked ? "b" : "");
+	flags += (document.getElementById("unbans").checked ? "u" : "");
+
+	return flags;
 }

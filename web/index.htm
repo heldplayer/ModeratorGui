@@ -22,9 +22,29 @@
 		<button onclick="findReporter();">Find by reporter</button>
 		<!-- If you want to query who was reported -->
 		<button onclick="findReported();">Find by reported</button>
+		<!-- List of flags for getting reports -->
+		<label for="issues"><input type="checkbox" id="issues" checked="checked" /> Issues</label>
+		<label for="promotions"><input type="checkbox" id="promotions" checked="checked" /> Promotions</label>
+		<label for="demotions"><input type="checkbox" id="demotions" checked="checked" /> Demotions</label>
+		<label for="bans"><input type="checkbox" id="bans" checked="checked" /> Bans</label>
+		<label for="unbans"><input type="checkbox" id="unbans" checked="checked" /> Unbans</label>
 		<!-- Side display -->
 		<span id="side"></span>
 	</div>
-	<div id="content"></div>
+	<table id="outercontent">
+		<thead>
+			<tr>
+				<th class="type">Type</th>
+				<th>Reporter</th>
+				<th>Reported</th>
+				<th>Reason</th>
+				<th>Timestamp</th>
+				<th>Previous rank</th>
+				<th>New rank</th>
+			</tr>
+		</thead>
+		<tbody id="content">
+		</tbody>
+	</table>
 </body>
 </html>
