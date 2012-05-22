@@ -1,29 +1,31 @@
 package me.heldplayer.ModeratorGui.WebGui;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class ErrorResponse extends WebResponse {
 	private ErrorType type;
 
-	public ErrorResponse(ErrorType type) {
+	public ErrorResponse(ErrorType type) throws IOException {
+		super();
 		this.type = type;
 	}
 
 	@Override
-	public void writeResponse(DataOutputStream stream, RequestFlags flags) throws IOException {
-		stream.writeBytes("HTTP/1.0 " + type.code + " " + type.reason + "\r\n");
-		stream.writeBytes("Connection: close\r\n");
-		stream.writeBytes("Server: ModeratorGui\r\n");
-		stream.writeBytes("Content-Type: text/plain\r\n");
-		stream.writeBytes("\r\n");
+	public WebResponse writeResponse(RequestFlags flags) throws IOException {
+		dop.writeBytes("HTTP/1.0 " + type.code + " " + type.reason + "\r\n");
+		dop.writeBytes("Connection: close\r\n");
+		dop.writeBytes("Server: ModeratorGui\r\n");
+		dop.writeBytes("Content-Type: text/plain\r\n");
+		dop.writeBytes("\r\n");
 
 		if (flags.method.hasBody) {
-			stream.writeBytes("Error code " + type.code + " - " + type.reason + "\r\n");
-			stream.writeBytes("Unable to load the requested page :(\r\n");
-			stream.writeBytes("\r\n");
-			stream.writeBytes("Please try again later\r\n");
+			dop.writeBytes("Error code " + type.code + " - " + type.reason + "\r\n");
+			dop.writeBytes("Unable to load the requested page :(\r\n");
+			dop.writeBytes("\r\n");
+			dop.writeBytes("Please try again later\r\n");
 		}
+
+		return this;
 	}
 
 	public static enum ErrorType {

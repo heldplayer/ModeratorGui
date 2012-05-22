@@ -1,6 +1,5 @@
 package me.heldplayer.ModeratorGui.WebGui;
 
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -8,19 +7,20 @@ import java.io.IOException;
 public class FileResponse extends WebResponse {
 	private File file;
 
-	public FileResponse(File file) {
+	public FileResponse(File file) throws IOException {
+		super();
 		this.file = file;
 	}
 
 	@Override
-	public void writeResponse(DataOutputStream stream, RequestFlags flags) throws IOException {
+	public WebResponse writeResponse(RequestFlags flags) throws IOException {
 		Extension extension = Extension.fromFileName(file.getName());
 
-		stream.writeBytes("HTTP/1.0 200 OK\r\n");
-		stream.writeBytes("Connection: close\r\n");
-		stream.writeBytes("Server: ModeratorGui\r\n");
-		stream.writeBytes("Content-Type: " + extension.type + "\r\n");
-		stream.writeBytes("\r\n");
+		dop.writeBytes("HTTP/1.0 200 OK\r\n");
+		dop.writeBytes("Connection: close\r\n");
+		dop.writeBytes("Server: ModeratorGui\r\n");
+		dop.writeBytes("Content-Type: " + extension.type + "\r\n");
+		dop.writeBytes("\r\n");
 
 		FileInputStream input = new FileInputStream(file);
 
@@ -30,11 +30,13 @@ public class FileResponse extends WebResponse {
 				if (b == -1) {
 					break;
 				}
-				stream.write(b);
+				dop.write(b);
 			}
 		}
 
 		input.close();
+
+		return this;
 	}
 
 	private static enum Extension {

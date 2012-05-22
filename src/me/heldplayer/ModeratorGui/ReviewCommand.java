@@ -27,7 +27,8 @@ public class ReviewCommand implements CommandExecutor {
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command,
+			String alias, String[] args) {
 		if (!sender.hasPermission("moderatorgui.review")) {
 			sender.sendMessage(ChatColor.RED + "You don't have permissions for this!");
 			return true;
@@ -40,7 +41,8 @@ public class ReviewCommand implements CommandExecutor {
 			results[1] = ChatColor.GRAY + "Current date: " + dateFormat.format(Long.valueOf(System.currentTimeMillis()));
 			results[2] = ChatColor.GRAY + "" + ChatColor.ITALIC + "All dates are MM-dd-yyyy";
 
-			List<Lists> lists = main.getDatabase().find(Lists.class).setMaxRows(10).orderBy("id DESC").findList();
+			List<Lists> lists = main.getDatabase().find(Lists.class).setMaxRows(
+					10).orderBy("id DESC").findList();
 
 			int sideI = 3;
 			for (Lists list : lists) {
@@ -53,27 +55,32 @@ public class ReviewCommand implements CommandExecutor {
 
 				switch (type) {
 				case ISSUE:
-					Issues issue = main.getDatabase().find(Issues.class).where().eq("id", id).findUnique();
+					Issues issue = main.getDatabase().find(Issues.class).where().eq(
+							"id", id).findUnique();
 
 					results[sideI] = ChatColor.YELLOW + "[X] " + ChatColor.AQUA + issue.getReported() + ChatColor.YELLOW + ", by " + ChatColor.AQUA + issue.getReporter() + ChatColor.YELLOW + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(issue.getTimestamp())) + ChatColor.YELLOW + ": " + issue.getIssue();
 					break;
 				case BAN:
-					Bans ban = main.getDatabase().find(Bans.class).where().eq("id", id).findUnique();
+					Bans ban = main.getDatabase().find(Bans.class).where().eq(
+							"id", id).findUnique();
 
 					results[sideI] = ChatColor.DARK_RED + "[X] " + ChatColor.AQUA + ban.getBanned() + ChatColor.DARK_RED + ", by " + ChatColor.AQUA + ban.getBanner() + ChatColor.DARK_RED + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(ban.getTimestamp())) + ChatColor.DARK_RED + ": " + ban.getReason();
 					break;
 				case UNBAN:
-					Unbans unban = main.getDatabase().find(Unbans.class).where().eq("id", id).findUnique();
+					Unbans unban = main.getDatabase().find(Unbans.class).where().eq(
+							"id", id).findUnique();
 
 					results[sideI] = ChatColor.DARK_GREEN + "[X] " + ChatColor.AQUA + unban.getUnbanned() + ChatColor.DARK_GREEN + ", by " + ChatColor.AQUA + unban.getUnbanner() + ChatColor.DARK_GREEN + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(unban.getTimestamp())) + ChatColor.DARK_GREEN + ": " + unban.getReason();
 					break;
 				case PROMOTE:
-					Promotions promote = main.getDatabase().find(Promotions.class).where().eq("id", id).findUnique();
+					Promotions promote = main.getDatabase().find(
+							Promotions.class).where().eq("id", id).findUnique();
 
 					results[sideI] = ChatColor.GREEN + "[X] " + ChatColor.AQUA + promote.getPromoted() + ChatColor.GREEN + ", by " + ChatColor.AQUA + promote.getPromoter() + ChatColor.GREEN + ", " + ChatColor.AQUA + promote.getPrevRank() + ChatColor.GREEN + " => " + ChatColor.AQUA + promote.getNewRank() + ChatColor.GREEN + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(promote.getTimestamp())) + ChatColor.GREEN + ": " + promote.getReason();
 					break;
 				case DEMOTE:
-					Demotions demote = main.getDatabase().find(Demotions.class).where().eq("id", id).findUnique();
+					Demotions demote = main.getDatabase().find(Demotions.class).where().eq(
+							"id", id).findUnique();
 
 					results[sideI] = ChatColor.RED + "[X] " + ChatColor.AQUA + demote.getDemoted() + ChatColor.RED + ", by " + ChatColor.AQUA + demote.getDemoter() + ChatColor.RED + ", " + ChatColor.AQUA + demote.getPrevRank() + ChatColor.RED + " => " + ChatColor.AQUA + demote.getNewRank() + ChatColor.RED + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(demote.getTimestamp())) + ChatColor.RED + ": " + demote.getReason();
 					break;
@@ -111,7 +118,8 @@ public class ReviewCommand implements CommandExecutor {
 
 				int sideI = 3;
 
-				List<Lists> lists = main.getDatabase().find(Lists.class).setMaxRows(10).setFirstRow(page * 10).orderBy("id DESC").findList();
+				List<Lists> lists = main.getDatabase().find(Lists.class).setMaxRows(
+						10).setFirstRow(page * 10).orderBy("id DESC").findList();
 
 				for (Lists list : lists) {
 
@@ -124,27 +132,32 @@ public class ReviewCommand implements CommandExecutor {
 
 					switch (type) {
 					case ISSUE:
-						Issues issue = main.getDatabase().find(Issues.class).where().eq("id", id).findUnique();
+						Issues issue = main.getDatabase().find(Issues.class).where().eq(
+								"id", id).findUnique();
 
 						results[sideI] = ChatColor.YELLOW + "[X] " + ChatColor.AQUA + issue.getReported() + ChatColor.YELLOW + ", by " + ChatColor.AQUA + issue.getReporter() + ChatColor.YELLOW + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(issue.getTimestamp())) + ChatColor.YELLOW + ": " + issue.getIssue();
 						break;
 					case BAN:
-						Bans ban = main.getDatabase().find(Bans.class).where().eq("id", id).findUnique();
+						Bans ban = main.getDatabase().find(Bans.class).where().eq(
+								"id", id).findUnique();
 
 						results[sideI] = ChatColor.DARK_RED + "[X] " + ChatColor.AQUA + ban.getBanned() + ChatColor.DARK_RED + ", by " + ChatColor.AQUA + ban.getBanner() + ChatColor.DARK_RED + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(ban.getTimestamp())) + ChatColor.DARK_RED + ": " + ban.getReason();
 						break;
 					case UNBAN:
-						Unbans unban = main.getDatabase().find(Unbans.class).where().eq("id", id).findUnique();
+						Unbans unban = main.getDatabase().find(Unbans.class).where().eq(
+								"id", id).findUnique();
 
 						results[sideI] = ChatColor.DARK_GREEN + "[X] " + ChatColor.AQUA + unban.getUnbanned() + ChatColor.DARK_GREEN + ", by " + ChatColor.AQUA + unban.getUnbanner() + ChatColor.DARK_GREEN + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(unban.getTimestamp())) + ChatColor.DARK_GREEN + ": " + unban.getReason();
 						break;
 					case PROMOTE:
-						Promotions promote = main.getDatabase().find(Promotions.class).where().eq("id", id).findUnique();
+						Promotions promote = main.getDatabase().find(
+								Promotions.class).where().eq("id", id).findUnique();
 
 						results[sideI] = ChatColor.GREEN + "[X] " + ChatColor.AQUA + promote.getPromoted() + ChatColor.GREEN + ", by " + ChatColor.AQUA + promote.getPromoter() + ChatColor.GREEN + ", " + ChatColor.AQUA + promote.getPrevRank() + ChatColor.GREEN + " => " + ChatColor.AQUA + promote.getNewRank() + ChatColor.GREEN + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(promote.getTimestamp())) + ChatColor.GREEN + ": " + promote.getReason();
 						break;
 					case DEMOTE:
-						Demotions demote = main.getDatabase().find(Demotions.class).where().eq("id", id).findUnique();
+						Demotions demote = main.getDatabase().find(
+								Demotions.class).where().eq("id", id).findUnique();
 
 						results[sideI] = ChatColor.RED + "[X] " + ChatColor.AQUA + demote.getDemoted() + ChatColor.RED + ", by " + ChatColor.AQUA + demote.getDemoter() + ChatColor.RED + ", " + ChatColor.AQUA + demote.getPrevRank() + ChatColor.RED + " => " + ChatColor.AQUA + demote.getNewRank() + ChatColor.RED + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(demote.getTimestamp())) + ChatColor.RED + ": " + demote.getReason();
 						break;
@@ -201,7 +214,8 @@ public class ReviewCommand implements CommandExecutor {
 
 				int sideI = 3;
 
-				List<Lists> lists = main.getDatabase().find(Lists.class).where().eq("reporter", name).setMaxRows(10).orderBy("id DESC").findList();
+				List<Lists> lists = main.getDatabase().find(Lists.class).where().eq(
+						"reporter", name).setMaxRows(10).orderBy("id DESC").findList();
 
 				for (Lists list : lists) {
 					if (list == null) {
@@ -213,27 +227,32 @@ public class ReviewCommand implements CommandExecutor {
 
 					switch (type) {
 					case ISSUE:
-						Issues issue = main.getDatabase().find(Issues.class).where().eq("id", id).findUnique();
+						Issues issue = main.getDatabase().find(Issues.class).where().eq(
+								"id", id).findUnique();
 
 						results[sideI] = ChatColor.YELLOW + "[X] " + ChatColor.AQUA + issue.getReported() + ChatColor.YELLOW + ", by " + ChatColor.AQUA + issue.getReporter() + ChatColor.YELLOW + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(issue.getTimestamp())) + ChatColor.YELLOW + ": " + issue.getIssue();
 						break;
 					case BAN:
-						Bans ban = main.getDatabase().find(Bans.class).where().eq("id", id).findUnique();
+						Bans ban = main.getDatabase().find(Bans.class).where().eq(
+								"id", id).findUnique();
 
 						results[sideI] = ChatColor.DARK_RED + "[X] " + ChatColor.AQUA + ban.getBanned() + ChatColor.DARK_RED + ", by " + ChatColor.AQUA + ban.getBanner() + ChatColor.DARK_RED + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(ban.getTimestamp())) + ChatColor.DARK_RED + ": " + ban.getReason();
 						break;
 					case UNBAN:
-						Unbans unban = main.getDatabase().find(Unbans.class).where().eq("id", id).findUnique();
+						Unbans unban = main.getDatabase().find(Unbans.class).where().eq(
+								"id", id).findUnique();
 
 						results[sideI] = ChatColor.DARK_GREEN + "[X] " + ChatColor.AQUA + unban.getUnbanned() + ChatColor.DARK_GREEN + ", by " + ChatColor.AQUA + unban.getUnbanner() + ChatColor.DARK_GREEN + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(unban.getTimestamp())) + ChatColor.DARK_GREEN + ": " + unban.getReason();
 						break;
 					case PROMOTE:
-						Promotions promote = main.getDatabase().find(Promotions.class).where().eq("id", id).findUnique();
+						Promotions promote = main.getDatabase().find(
+								Promotions.class).where().eq("id", id).findUnique();
 
 						results[sideI] = ChatColor.GREEN + "[X] " + ChatColor.AQUA + promote.getPromoted() + ChatColor.GREEN + ", by " + ChatColor.AQUA + promote.getPromoter() + ChatColor.GREEN + ", " + ChatColor.AQUA + promote.getPrevRank() + ChatColor.GREEN + " => " + ChatColor.AQUA + promote.getNewRank() + ChatColor.GREEN + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(promote.getTimestamp())) + ChatColor.GREEN + ": " + promote.getReason();
 						break;
 					case DEMOTE:
-						Demotions demote = main.getDatabase().find(Demotions.class).where().eq("id", id).findUnique();
+						Demotions demote = main.getDatabase().find(
+								Demotions.class).where().eq("id", id).findUnique();
 
 						results[sideI] = ChatColor.RED + "[X] " + ChatColor.AQUA + demote.getDemoted() + ChatColor.RED + ", by " + ChatColor.AQUA + demote.getDemoter() + ChatColor.RED + ", " + ChatColor.AQUA + demote.getPrevRank() + ChatColor.RED + " => " + ChatColor.AQUA + demote.getNewRank() + ChatColor.RED + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(demote.getTimestamp())) + ChatColor.RED + ": " + demote.getReason();
 						break;
@@ -295,7 +314,9 @@ public class ReviewCommand implements CommandExecutor {
 
 					int sideI = 3;
 
-					List<Lists> lists = main.getDatabase().find(Lists.class).where().eq("reporter", name).setMaxRows(10).setFirstRow(page * 10).orderBy("id DESC").findList();
+					List<Lists> lists = main.getDatabase().find(Lists.class).where().eq(
+							"reporter", name).setMaxRows(10).setFirstRow(
+							page * 10).orderBy("id DESC").findList();
 
 					for (Lists list : lists) {
 						if (list == null) {
@@ -307,27 +328,32 @@ public class ReviewCommand implements CommandExecutor {
 
 						switch (type) {
 						case ISSUE:
-							Issues issue = main.getDatabase().find(Issues.class).where().eq("id", id).findUnique();
+							Issues issue = main.getDatabase().find(Issues.class).where().eq(
+									"id", id).findUnique();
 
 							results[sideI] = ChatColor.YELLOW + "[X] " + ChatColor.AQUA + issue.getReported() + ChatColor.YELLOW + ", by " + ChatColor.AQUA + issue.getReporter() + ChatColor.YELLOW + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(issue.getTimestamp())) + ChatColor.YELLOW + ": " + issue.getIssue();
 							break;
 						case BAN:
-							Bans ban = main.getDatabase().find(Bans.class).where().eq("id", id).findUnique();
+							Bans ban = main.getDatabase().find(Bans.class).where().eq(
+									"id", id).findUnique();
 
 							results[sideI] = ChatColor.DARK_RED + "[X] " + ChatColor.AQUA + ban.getBanned() + ChatColor.DARK_RED + ", by " + ChatColor.AQUA + ban.getBanner() + ChatColor.DARK_RED + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(ban.getTimestamp())) + ChatColor.DARK_RED + ": " + ban.getReason();
 							break;
 						case UNBAN:
-							Unbans unban = main.getDatabase().find(Unbans.class).where().eq("id", id).findUnique();
+							Unbans unban = main.getDatabase().find(Unbans.class).where().eq(
+									"id", id).findUnique();
 
 							results[sideI] = ChatColor.DARK_GREEN + "[X] " + ChatColor.AQUA + unban.getUnbanned() + ChatColor.DARK_GREEN + ", by " + ChatColor.AQUA + unban.getUnbanner() + ChatColor.DARK_GREEN + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(unban.getTimestamp())) + ChatColor.DARK_GREEN + ": " + unban.getReason();
 							break;
 						case PROMOTE:
-							Promotions promote = main.getDatabase().find(Promotions.class).where().eq("id", id).findUnique();
+							Promotions promote = main.getDatabase().find(
+									Promotions.class).where().eq("id", id).findUnique();
 
 							results[sideI] = ChatColor.GREEN + "[X] " + ChatColor.AQUA + promote.getPromoted() + ChatColor.GREEN + ", by " + ChatColor.AQUA + promote.getPromoter() + ChatColor.GREEN + ", " + ChatColor.AQUA + promote.getPrevRank() + ChatColor.GREEN + " => " + ChatColor.AQUA + promote.getNewRank() + ChatColor.GREEN + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(promote.getTimestamp())) + ChatColor.GREEN + ": " + promote.getReason();
 							break;
 						case DEMOTE:
-							Demotions demote = main.getDatabase().find(Demotions.class).where().eq("id", id).findUnique();
+							Demotions demote = main.getDatabase().find(
+									Demotions.class).where().eq("id", id).findUnique();
 
 							results[sideI] = ChatColor.RED + "[X] " + ChatColor.AQUA + demote.getDemoted() + ChatColor.RED + ", by " + ChatColor.AQUA + demote.getDemoter() + ChatColor.RED + ", " + ChatColor.AQUA + demote.getPrevRank() + ChatColor.RED + " => " + ChatColor.AQUA + demote.getNewRank() + ChatColor.RED + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(demote.getTimestamp())) + ChatColor.RED + ": " + demote.getReason();
 							break;
@@ -385,7 +411,8 @@ public class ReviewCommand implements CommandExecutor {
 
 				int sideI = 3;
 
-				List<Lists> lists = main.getDatabase().find(Lists.class).where().eq("target", name).setMaxRows(10).orderBy("id DESC").findList();
+				List<Lists> lists = main.getDatabase().find(Lists.class).where().eq(
+						"target", name).setMaxRows(10).orderBy("id DESC").findList();
 
 				for (Lists list : lists) {
 					if (list == null) {
@@ -397,27 +424,32 @@ public class ReviewCommand implements CommandExecutor {
 
 					switch (type) {
 					case ISSUE:
-						Issues issue = main.getDatabase().find(Issues.class).where().eq("id", id).findUnique();
+						Issues issue = main.getDatabase().find(Issues.class).where().eq(
+								"id", id).findUnique();
 
 						results[sideI] = ChatColor.YELLOW + "[X] " + ChatColor.AQUA + issue.getReported() + ChatColor.YELLOW + ", by " + ChatColor.AQUA + issue.getReporter() + ChatColor.YELLOW + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(issue.getTimestamp())) + ChatColor.YELLOW + ": " + issue.getIssue();
 						break;
 					case BAN:
-						Bans ban = main.getDatabase().find(Bans.class).where().eq("id", id).findUnique();
+						Bans ban = main.getDatabase().find(Bans.class).where().eq(
+								"id", id).findUnique();
 
 						results[sideI] = ChatColor.DARK_RED + "[X] " + ChatColor.AQUA + ban.getBanned() + ChatColor.DARK_RED + ", by " + ChatColor.AQUA + ban.getBanner() + ChatColor.DARK_RED + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(ban.getTimestamp())) + ChatColor.DARK_RED + ": " + ban.getReason();
 						break;
 					case UNBAN:
-						Unbans unban = main.getDatabase().find(Unbans.class).where().eq("id", id).findUnique();
+						Unbans unban = main.getDatabase().find(Unbans.class).where().eq(
+								"id", id).findUnique();
 
 						results[sideI] = ChatColor.DARK_GREEN + "[X] " + ChatColor.AQUA + unban.getUnbanned() + ChatColor.DARK_GREEN + ", by " + ChatColor.AQUA + unban.getUnbanner() + ChatColor.DARK_GREEN + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(unban.getTimestamp())) + ChatColor.DARK_GREEN + ": " + unban.getReason();
 						break;
 					case PROMOTE:
-						Promotions promote = main.getDatabase().find(Promotions.class).where().eq("id", id).findUnique();
+						Promotions promote = main.getDatabase().find(
+								Promotions.class).where().eq("id", id).findUnique();
 
 						results[sideI] = ChatColor.GREEN + "[X] " + ChatColor.AQUA + promote.getPromoted() + ChatColor.GREEN + ", by " + ChatColor.AQUA + promote.getPromoter() + ChatColor.GREEN + ", " + ChatColor.AQUA + promote.getPrevRank() + ChatColor.GREEN + " => " + ChatColor.AQUA + promote.getNewRank() + ChatColor.GREEN + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(promote.getTimestamp())) + ChatColor.GREEN + ": " + promote.getReason();
 						break;
 					case DEMOTE:
-						Demotions demote = main.getDatabase().find(Demotions.class).where().eq("id", id).findUnique();
+						Demotions demote = main.getDatabase().find(
+								Demotions.class).where().eq("id", id).findUnique();
 
 						results[sideI] = ChatColor.RED + "[X] " + ChatColor.AQUA + demote.getDemoted() + ChatColor.RED + ", by " + ChatColor.AQUA + demote.getDemoter() + ChatColor.RED + ", " + ChatColor.AQUA + demote.getPrevRank() + ChatColor.RED + " => " + ChatColor.AQUA + demote.getNewRank() + ChatColor.RED + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(demote.getTimestamp())) + ChatColor.RED + ": " + demote.getReason();
 						break;
@@ -480,7 +512,9 @@ public class ReviewCommand implements CommandExecutor {
 
 					int sideI = 3;
 
-					List<Lists> lists = main.getDatabase().find(Lists.class).where().eq("target", name).setMaxRows(10).setFirstRow(page * 10).orderBy("id DESC").findList();
+					List<Lists> lists = main.getDatabase().find(Lists.class).where().eq(
+							"target", name).setMaxRows(10).setFirstRow(
+							page * 10).orderBy("id DESC").findList();
 
 					for (Lists list : lists) {
 						if (list == null) {
@@ -492,27 +526,32 @@ public class ReviewCommand implements CommandExecutor {
 
 						switch (type) {
 						case ISSUE:
-							Issues issue = main.getDatabase().find(Issues.class).where().eq("id", id).findUnique();
+							Issues issue = main.getDatabase().find(Issues.class).where().eq(
+									"id", id).findUnique();
 
 							results[sideI] = ChatColor.YELLOW + "[X] " + ChatColor.AQUA + issue.getReported() + ChatColor.YELLOW + ", by " + ChatColor.AQUA + issue.getReporter() + ChatColor.YELLOW + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(issue.getTimestamp())) + ChatColor.YELLOW + ": " + issue.getIssue();
 							break;
 						case BAN:
-							Bans ban = main.getDatabase().find(Bans.class).where().eq("id", id).findUnique();
+							Bans ban = main.getDatabase().find(Bans.class).where().eq(
+									"id", id).findUnique();
 
 							results[sideI] = ChatColor.DARK_RED + "[X] " + ChatColor.AQUA + ban.getBanned() + ChatColor.DARK_RED + ", by " + ChatColor.AQUA + ban.getBanner() + ChatColor.DARK_RED + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(ban.getTimestamp())) + ChatColor.DARK_RED + ": " + ban.getReason();
 							break;
 						case UNBAN:
-							Unbans unban = main.getDatabase().find(Unbans.class).where().eq("id", id).findUnique();
+							Unbans unban = main.getDatabase().find(Unbans.class).where().eq(
+									"id", id).findUnique();
 
 							results[sideI] = ChatColor.DARK_GREEN + "[X] " + ChatColor.AQUA + unban.getUnbanned() + ChatColor.DARK_GREEN + ", by " + ChatColor.AQUA + unban.getUnbanner() + ChatColor.DARK_GREEN + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(unban.getTimestamp())) + ChatColor.DARK_GREEN + ": " + unban.getReason();
 							break;
 						case PROMOTE:
-							Promotions promote = main.getDatabase().find(Promotions.class).where().eq("id", id).findUnique();
+							Promotions promote = main.getDatabase().find(
+									Promotions.class).where().eq("id", id).findUnique();
 
 							results[sideI] = ChatColor.GREEN + "[X] " + ChatColor.AQUA + promote.getPromoted() + ChatColor.GREEN + ", by " + ChatColor.AQUA + promote.getPromoter() + ChatColor.GREEN + ", " + ChatColor.AQUA + promote.getPrevRank() + ChatColor.GREEN + " => " + ChatColor.AQUA + promote.getNewRank() + ChatColor.GREEN + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(promote.getTimestamp())) + ChatColor.GREEN + ": " + promote.getReason();
 							break;
 						case DEMOTE:
-							Demotions demote = main.getDatabase().find(Demotions.class).where().eq("id", id).findUnique();
+							Demotions demote = main.getDatabase().find(
+									Demotions.class).where().eq("id", id).findUnique();
 
 							results[sideI] = ChatColor.RED + "[X] " + ChatColor.AQUA + demote.getDemoted() + ChatColor.RED + ", by " + ChatColor.AQUA + demote.getDemoter() + ChatColor.RED + ", " + ChatColor.AQUA + demote.getPrevRank() + ChatColor.RED + " => " + ChatColor.AQUA + demote.getNewRank() + ChatColor.RED + " on " + ChatColor.AQUA + dateFormat.format(Long.valueOf(demote.getTimestamp())) + ChatColor.RED + ": " + demote.getReason();
 							break;

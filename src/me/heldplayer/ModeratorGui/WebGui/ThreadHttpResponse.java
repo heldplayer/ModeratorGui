@@ -32,7 +32,8 @@ public class ThreadHttpResponse extends Thread {
 		main: {
 			try {
 				out = new DataOutputStream(socket.getOutputStream());
-				in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				in = new BufferedReader(new InputStreamReader(
+						socket.getInputStream()));
 
 				TreeMap<Integer, String> input = new TreeMap<Integer, String>();
 				Integer i = 0;
@@ -56,7 +57,8 @@ public class ThreadHttpResponse extends Thread {
 				}
 
 				if (input.size() <= 0) {
-					new ErrorResponse(ErrorType.BadRequest).writeResponse(out, flags);
+					new ErrorResponse(ErrorType.BadRequest).writeResponse(flags).flush(
+							out);
 
 					break main;
 				}
@@ -69,58 +71,69 @@ public class ThreadHttpResponse extends Thread {
 				flags.method = RequestFlags.Method.fromString(method);
 
 				if (flags.method == RequestFlags.Method.NULL) {
-					new ErrorResponse(ErrorType.NotImplemented).writeResponse(out, flags);
+					new ErrorResponse(ErrorType.NotImplemented).writeResponse(
+							flags).flush(out);
 
 					break main;
 				}
 
 				if (!version.split("/")[1].equalsIgnoreCase("1.0") && !version.split("/")[1].equalsIgnoreCase("1.1")) {
-					new ErrorResponse(ErrorType.HTTPVersionNotSupported).writeResponse(out, flags);
+					new ErrorResponse(ErrorType.HTTPVersionNotSupported).writeResponse(
+							flags).flush(out);
 
 					break main;
 				}
 
 				if (location.startsWith("/GENERATED/")) {
 					if (location.startsWith("/GENERATED/LOGIN/")) {
-						new LoginResponse(location.substring(11 + 6)).writeResponse(out, flags);
+						new LoginResponse(location.substring(11 + 6)).writeResponse(
+								flags).flush(out);
 
 						break main;
 					}
 					if (location.startsWith("/GENERATED/LIST/")) {
-						String session = location.substring(11 + 5);
+						String[] sepperated = location.substring(11 + 5).split(
+								"/");
 
-						if (ThreadWebserver.instance.sessionAllowed(session)) {
-							new ListResponse().writeResponse(out, flags);
+						if (ThreadWebserver.instance.sessionAllowed(sepperated[0])) {
+							new ListResponse(sepperated[1]).writeResponse(flags).flush(out);
 
 							break main;
 						} else {
-							new ErrorResponse(ErrorType.Forbidden).writeResponse(out, flags);
+							new ErrorResponse(ErrorType.Forbidden).writeResponse(
+									flags).flush(out);
 
 							break main;
 						}
 					}
 					if (location.startsWith("/GENERATED/REPORTER/")) {
-						String[] sepperated = location.substring(11 + 9).split("/", 2);
+						String[] sepperated = location.substring(11 + 9).split(
+								"/");
 
 						if (ThreadWebserver.instance.sessionAllowed(sepperated[0])) {
-							new ReporterResponse(sepperated[1]).writeResponse(out, flags);
+							new ReporterResponse(sepperated[1], sepperated[2]).writeResponse(
+									flags).flush(out);
 
 							break main;
 						} else {
-							new ErrorResponse(ErrorType.Forbidden).writeResponse(out, flags);
+							new ErrorResponse(ErrorType.Forbidden).writeResponse(
+									flags).flush(out);
 
 							break main;
 						}
 					}
 					if (location.startsWith("/GENERATED/REPORTED/")) {
-						String[] sepperated = location.substring(11 + 9).split("/", 2);
+						String[] sepperated = location.substring(11 + 9).split(
+								"/");
 
 						if (ThreadWebserver.instance.sessionAllowed(sepperated[0])) {
-							new ReportedResponse(sepperated[1]).writeResponse(out, flags);
+							new ReportedResponse(sepperated[1], sepperated[2]).writeResponse(
+									flags).flush(out);
 
 							break main;
 						} else {
-							new ErrorResponse(ErrorType.Forbidden).writeResponse(out, flags);
+							new ErrorResponse(ErrorType.Forbidden).writeResponse(
+									flags).flush(out);
 
 							break main;
 						}
@@ -134,31 +147,36 @@ public class ThreadHttpResponse extends Thread {
 						location = location.concat("index.htm");
 					}
 
-					File root = new File(ModeratorGui.instance.getDataFolder(), "web");
+					File root = new File(ModeratorGui.instance.getDataFolder(),
+							"web");
 					File file = new File(root, location).getAbsoluteFile();
 
 					if (file.isDirectory()) {
-						new ErrorResponse(ErrorType.Forbidden).writeResponse(out, flags);
+						new ErrorResponse(ErrorType.Forbidden).writeResponse(
+								flags).flush(out);
 
 						break main;
 					} else if (file.exists()) {
-						new FileResponse(file).writeResponse(out, flags);
+						new FileResponse(file).writeResponse(flags).flush(out);
 
 						break main;
 					} else {
-						new ErrorResponse(ErrorType.NotFound).writeResponse(out, flags);
+						new ErrorResponse(ErrorType.NotFound).writeResponse(
+								flags).flush(out);
 
 						break main;
 					}
 				}
 			} catch (IOException e) {
+				e.printStackTrace();
 			} catch (RuntimeException ex) {
 				if (!ex.getMessage().equalsIgnoreCase("break")) {
 					ex.printStackTrace();
 				}
 
 				try {
-					new ErrorResponse(ErrorType.InternalServerError).writeResponse(out, flags);
+					new ErrorResponse(ErrorType.InternalServerError).writeResponse(
+							flags).flush(out);
 				} catch (IOException e) {
 				}
 			} finally {

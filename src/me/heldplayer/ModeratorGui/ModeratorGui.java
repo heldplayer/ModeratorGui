@@ -47,7 +47,8 @@ public class ModeratorGui extends JavaPlugin {
 		getCommand("report").setExecutor(new ReportCommand(this));
 		getCommand("review").setExecutor(new ReviewCommand(this));
 
-		serverThread = new ThreadWebserver(config.getInt("port", 8273), config.getString("host", ""));
+		serverThread = new ThreadWebserver(config.getInt("port", 8273),
+				config.getString("host", ""));
 
 		saveConfig();
 
@@ -98,7 +99,8 @@ public class ModeratorGui extends JavaPlugin {
 			if (player.getName().length() < name.length()) {
 				continue;
 			}
-			if (player.getName().substring(0, name.length()).equalsIgnoreCase(name)) {
+			if (player.getName().substring(0, name.length()).equalsIgnoreCase(
+					name)) {
 				matched.add(player.getName());
 			}
 		}

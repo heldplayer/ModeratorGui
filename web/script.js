@@ -1,7 +1,8 @@
 var session = "";
 
 function init() {
-	var pass = prompt("Please enter the password to use the web client", "");
+	var pass = Sha256
+			.hash(prompt("Please enter the password to use the web client", ""), false);
 
 	var xmlhttp = null;
 
@@ -35,7 +36,7 @@ function displayList() {
 		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
 	xmlhttp
-			.open("GET", "/GENERATED/LIST/" + session + getRequestFlags() + "/", false);
+			.open("GET", "/GENERATED/LIST/" + session + "/" + getRequestFlags(), false);
 	xmlhttp.send();
 
 	if (xmlhttp.status != 200) {

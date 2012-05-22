@@ -1,6 +1,5 @@
 package me.heldplayer.ModeratorGui.WebGui;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -17,25 +16,91 @@ import me.heldplayer.ModeratorGui.tables.Unbans;
 
 import org.json.simple.JSONObject;
 
-public class ListResponse extends WebResponse {
-	private static SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+import com.avaje.ebean.Expression;
+import com.avaje.ebean.ExpressionFactory;
+import com.avaje.ebean.Query;
 
-	public ListResponse() {
+public class ListResponse extends WebResponse {
+	private static SimpleDateFormat dateFormat = new SimpleDateFormat(
+			"MM-dd-yyyy");
+
+	private final boolean issues;
+	private final boolean promotions;
+	private final boolean demotions;
+	private final boolean bans;
+	private final boolean unbans;
+
+	public ListResponse(String listFlags) throws IOException {
+		super();
+
+		issues = listFlags.contains("i");
+		promotions = listFlags.contains("p");
+		demotions = listFlags.contains("d");
+		bans = listFlags.contains("b");
+		unbans = listFlags.contains("u");
 	}
 
 	@Override
-	public void writeResponse(DataOutputStream stream, RequestFlags flags) throws IOException {
-		stream.writeBytes("HTTP/1.0 200 Ok\r\n");
-		stream.writeBytes("Connection: close\r\n");
-		stream.writeBytes("Server: ModeratorGui\r\n");
-		stream.writeBytes("Content-Type: text/plain\r\n");
-		stream.writeBytes("\r\n");
+	public WebResponse writeResponse(RequestFlags flags) throws IOException {
+		dop.writeBytes("HTTP/1.0 200 Ok\r\n");
+		dop.writeBytes("Connection: close\r\n");
+		dop.writeBytes("Server: ModeratorGui\r\n");
+		dop.writeBytes("Content-Type: text/plain\r\n");
+		dop.writeBytes("\r\n");
 
 		Integer i = 0;
 
 		TreeMap<Integer, String> map = new TreeMap<Integer, String>();
 
-		List<Lists> lists = ModeratorGui.instance.getDatabase().find(Lists.class).where().setMaxRows(500).orderBy("id DESC").findList();
+		Query<Lists> eLists = ModeratorGui.instance.getDatabase().find(
+				Lists.class);
+
+		ExpressionFactory factory = eLists.getExpressionFactory();
+
+		Expression lastExpr = null;
+
+		if (!issues && !bans && !unbans && !promotions && !demotions) {
+			lastExpr = factory.ne("type", 0);
+		}
+
+		if (issues) {
+			lastExpr = factory.eq("type", 1);
+		}
+
+		if (bans) {
+			if (lastExpr != null) {
+				lastExpr = factory.or(lastExpr, factory.eq("type", 2));
+			} else {
+				lastExpr = factory.eq("type", 2);
+			}
+		}
+
+		if (unbans) {
+			if (lastExpr != null) {
+				lastExpr = factory.or(lastExpr, factory.eq("type", 3));
+			} else {
+				lastExpr = factory.eq("type", 3);
+			}
+		}
+
+		if (promotions) {
+			if (lastExpr != null) {
+				lastExpr = factory.or(lastExpr, factory.eq("type", 4));
+			} else {
+				lastExpr = factory.eq("type", 4);
+			}
+		}
+
+		if (demotions) {
+			if (lastExpr != null) {
+				lastExpr = factory.or(lastExpr, factory.eq("type", 5));
+			} else {
+				lastExpr = factory.eq("type", 5);
+			}
+		}
+
+		List<Lists> lists = eLists.where(lastExpr).setMaxRows(500).orderBy(
+				"id DESC").findList();
 
 		for (Lists list : lists) {
 			int id = list.getReportId();
@@ -44,7 +109,8 @@ public class ListResponse extends WebResponse {
 			String result = "";
 			switch (type) {
 			case ISSUE:
-				Issues issue = ModeratorGui.instance.getDatabase().find(Issues.class).where().eq("id", id).findUnique();
+				Issues issue = ModeratorGui.instance.getDatabase().find(
+						Issues.class).where().eq("id", id).findUnique();
 
 				result = "{ ";
 				result += "type: \"issue\", ";
@@ -57,7 +123,8 @@ public class ListResponse extends WebResponse {
 				map.put(i++, result);
 				break;
 			case BAN:
-				Bans ban = ModeratorGui.instance.getDatabase().find(Bans.class).where().eq("id", id).findUnique();
+				Bans ban = ModeratorGui.instance.getDatabase().find(Bans.class).where().eq(
+						"id", id).findUnique();
 
 				result = "{ ";
 				result += "type: \"ban\", ";
@@ -70,7 +137,8 @@ public class ListResponse extends WebResponse {
 				map.put(i++, result);
 				break;
 			case UNBAN:
-				Unbans unban = ModeratorGui.instance.getDatabase().find(Unbans.class).where().eq("id", id).findUnique();
+				Unbans unban = ModeratorGui.instance.getDatabase().find(
+						Unbans.class).where().eq("id", id).findUnique();
 
 				result = "{ ";
 				result += "type: \"unban\", ";
@@ -83,7 +151,8 @@ public class ListResponse extends WebResponse {
 				map.put(i++, result);
 				break;
 			case PROMOTE:
-				Promotions promote = ModeratorGui.instance.getDatabase().find(Promotions.class).where().eq("id", id).findUnique();
+				Promotions promote = ModeratorGui.instance.getDatabase().find(
+						Promotions.class).where().eq("id", id).findUnique();
 
 				result = "{ ";
 				result += "type: \"promote\", ";
@@ -98,7 +167,8 @@ public class ListResponse extends WebResponse {
 				map.put(i++, result);
 				break;
 			case DEMOTE:
-				Demotions demote = ModeratorGui.instance.getDatabase().find(Demotions.class).where().eq("id", id).findUnique();
+				Demotions demote = ModeratorGui.instance.getDatabase().find(
+						Demotions.class).where().eq("id", id).findUnique();
 
 				result = "{ ";
 				result += "type: \"demote\", ";
@@ -124,6 +194,8 @@ public class ListResponse extends WebResponse {
 		}
 		result += " ]";
 
-		stream.writeBytes(result);
+		dop.writeBytes(result);
+
+		return this;
 	}
 }
