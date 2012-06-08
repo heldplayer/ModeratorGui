@@ -18,12 +18,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.avaje.ebean.SqlUpdate;
+
 public class ModeratorGui extends JavaPlugin {
 
 	public PluginDescriptionFile pdf;
 	public List<String> ranks;
 	private ThreadWebserver serverThread;
 	public static ModeratorGui instance;
+	public static final int version = 102;
 
 	@Override
 	public void onDisable() {
@@ -47,8 +50,21 @@ public class ModeratorGui extends JavaPlugin {
 		getCommand("report").setExecutor(new ReportCommand(this));
 		getCommand("review").setExecutor(new ReviewCommand(this));
 
-		serverThread = new ThreadWebserver(config.getInt("port", 8273),
-				config.getString("host", ""));
+		serverThread = new ThreadWebserver(config.getInt("port", 8273), config.getString("host", ""));
+
+		if (!config.isSet("config-version")) {
+			config.set("config-version", 1);
+		}
+
+		if (config.getInt("config-version") < 2) {
+			getLogger().info("Updating `mgui_issues` table for ModeratorGui 1.2");
+
+			SqlUpdate update = getDatabase().createSqlUpdate("ALTER TABLE `mgui_issues` ADD `is_closed` BOOLEAN NOT NULL DEFAULT '0' AFTER `issue`");
+
+			update.execute();
+
+			config.set("config-version", version);
+		}
 
 		saveConfig();
 
@@ -99,8 +115,7 @@ public class ModeratorGui extends JavaPlugin {
 			if (player.getName().length() < name.length()) {
 				continue;
 			}
-			if (player.getName().substring(0, name.length()).equalsIgnoreCase(
-					name)) {
+			if (player.getName().substring(0, name.length()).equalsIgnoreCase(name)) {
 				matched.add(player.getName());
 			}
 		}

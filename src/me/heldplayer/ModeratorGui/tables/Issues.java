@@ -26,6 +26,8 @@ public class Issues {
 	@NotNull
 	private String issue;
 
+	private boolean isClosed = false;
+
 	@NotNull
 	private long timestamp;
 
@@ -67,5 +69,13 @@ public class Issues {
 
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public boolean isClosed() {
+		return isClosed;
+	}
+
+	public void setClosed(boolean isClosed) {
+		this.isClosed = isClosed;
 	}
 }
