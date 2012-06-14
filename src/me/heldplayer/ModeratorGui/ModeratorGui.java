@@ -1,5 +1,6 @@
 package me.heldplayer.ModeratorGui;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +14,10 @@ import me.heldplayer.ModeratorGui.tables.Lists;
 import me.heldplayer.ModeratorGui.tables.Promotions;
 import me.heldplayer.ModeratorGui.tables.Unbans;
 
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,7 +29,9 @@ public class ModeratorGui extends JavaPlugin {
 	public List<String> ranks;
 	private ThreadWebserver serverThread;
 	public static ModeratorGui instance;
-	public static final int version = 102;
+	public static final int version = 3;
+	public String[] displayStrings = new String[6];
+	public SimpleDateFormat dateFormat;
 
 	@Override
 	public void onDisable() {
@@ -45,6 +50,8 @@ public class ModeratorGui extends JavaPlugin {
 
 		FileConfiguration config = getConfig();
 
+		FileConfiguration defConfig = YamlConfiguration.loadConfiguration(getResource("config.yml"));
+
 		ranks = config.getStringList("ranks");
 
 		getCommand("report").setExecutor(new ReportCommand(this));
@@ -57,16 +64,31 @@ public class ModeratorGui extends JavaPlugin {
 		}
 
 		if (config.getInt("config-version") < 2) {
-			getLogger().info("Updating `mgui_issues` table for ModeratorGui 1.2");
+			getServer().getConsoleSender().sendMessage("[" + pdf.getPrefix() + "] " + ChatColor.LIGHT_PURPLE + "Updating table `mgui_issues` for ModeratorGui 1.2");
 
 			SqlUpdate update = getDatabase().createSqlUpdate("ALTER TABLE `mgui_issues` ADD `is_closed` BOOLEAN NOT NULL DEFAULT '0' AFTER `issue`");
 
 			update.execute();
-
-			config.set("config-version", version);
 		}
 
+		if (config.getInt("config-version") < 3) {
+			getServer().getConsoleSender().sendMessage("[" + pdf.getPrefix() + "] " + ChatColor.LIGHT_PURPLE + "Updating config file for for ModeratorGui 1.2");
+
+			config.set("messages", defConfig.get("messages"));
+		}
+
+		config.set("config-version", version);
+		
+		displayStrings[0] = config.getString("messages.issue");
+		displayStrings[1] = config.getString("messages.resolved-issue");
+		displayStrings[2] = config.getString("messages.promotion");
+		displayStrings[3] = config.getString("messages.demotion");
+		displayStrings[4] = config.getString("messages.ban");
+		displayStrings[5] = config.getString("messages.unban");
+
 		saveConfig();
+		
+		dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 
 		getLogger().info("Enabled!");
 	}
@@ -99,6 +121,22 @@ public class ModeratorGui extends JavaPlugin {
 		list.add(Demotions.class);
 		list.add(Lists.class);
 		return list;
+	}
+	
+	public String formatReport(String patern, int id, String target, String reporter, String reason, long date, String oldRank, String newRank) {
+		String result = patern;
+
+		result = result.replaceAll("%id%", id + "");
+		result = result.replaceAll("%target%", target);
+		result = result.replaceAll("%reporter%", reporter);
+		result = result.replaceAll("%reason%", reason);
+		result = result.replaceAll("%date%", dateFormat.format(Long.valueOf(date)));
+		result = result.replaceAll("%oldrank%", oldRank);
+		result = result.replaceAll("%newrank%", newRank);
+
+		result = ChatColor.translateAlternateColorCodes('&', result);
+
+		return result;
 	}
 
 	public static List<String> getPlayerMatches(String name) {

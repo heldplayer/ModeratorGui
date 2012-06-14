@@ -1,6 +1,5 @@
 package me.heldplayer.ModeratorGui;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import me.heldplayer.ModeratorGui.tables.Bans;
@@ -18,12 +17,9 @@ import org.bukkit.command.CommandSender;
 public class ReviewCommand implements CommandExecutor {
 
 	private final ModeratorGui main;
-	private final SimpleDateFormat dateFormat;
 
 	public ReviewCommand(ModeratorGui plugin) {
 		main = plugin;
-
-		dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 	}
 
 	private void displayLists(CommandSender sender, List<Lists> lists) {
@@ -35,54 +31,35 @@ public class ReviewCommand implements CommandExecutor {
 			int id = list.getReportId();
 			ReportType type = ReportType.getType(list.getType());
 
-			String dataColor = "";
-			String infoColor = "";
-
 			switch (type) {
 			case ISSUE:
 				Issues issue = main.getDatabase().find(Issues.class).where().eq("id", id).findUnique();
 
-				dataColor = ChatColor.AQUA.toString();
-				infoColor = ChatColor.YELLOW.toString();
-
 				if (issue.isClosed()) {
-					dataColor += ChatColor.STRIKETHROUGH.toString();
-					infoColor += ChatColor.STRIKETHROUGH.toString();
+					sender.sendMessage(main.formatReport(main.displayStrings[1], issue.getId(), issue.getReported(), issue.getReporter(), issue.getIssue(), issue.getTimestamp(), null, null));
+				} else {
+					sender.sendMessage(main.formatReport(main.displayStrings[0], issue.getId(), issue.getReported(), issue.getReporter(), issue.getIssue(), issue.getTimestamp(), null, null));
 				}
-
-				sender.sendMessage(dataColor + issue.getReported() + infoColor + ", by " + dataColor + issue.getReporter() + infoColor + " on " + dataColor + dateFormat.format(Long.valueOf(issue.getTimestamp())) + infoColor + ": " + issue.getIssue());
 				break;
 			case BAN:
 				Bans ban = main.getDatabase().find(Bans.class).where().eq("id", id).findUnique();
 
-				dataColor = ChatColor.AQUA.toString();
-				infoColor = ChatColor.DARK_RED.toString();
-
-				sender.sendMessage(dataColor + ban.getBanned() + infoColor + ", by " + dataColor + ban.getBanner() + infoColor + " on " + dataColor + dateFormat.format(Long.valueOf(ban.getTimestamp())) + infoColor + ": " + ban.getReason());
+				sender.sendMessage(main.formatReport(main.displayStrings[4], ban.getId(), ban.getBanned(), ban.getBanner(), ban.getReason(), ban.getTimestamp(), null, null));
 				break;
 			case UNBAN:
 				Unbans unban = main.getDatabase().find(Unbans.class).where().eq("id", id).findUnique();
 
-				dataColor = ChatColor.AQUA.toString();
-				infoColor = ChatColor.DARK_GREEN.toString();
-
-				sender.sendMessage(dataColor + unban.getUnbanned() + infoColor + ", by " + dataColor + unban.getUnbanner() + infoColor + " on " + dataColor + dateFormat.format(Long.valueOf(unban.getTimestamp())) + infoColor + ": " + unban.getReason());
+				sender.sendMessage(main.formatReport(main.displayStrings[5], unban.getId(), unban.getUnbanned(), unban.getUnbanner(), unban.getReason(), unban.getTimestamp(), null, null));
 				break;
 			case PROMOTE:
 				Promotions promote = main.getDatabase().find(Promotions.class).where().eq("id", id).findUnique();
 
-				dataColor = ChatColor.AQUA.toString();
-				infoColor = ChatColor.GREEN.toString();
-
-				sender.sendMessage(dataColor + promote.getPromoted() + infoColor + ", by " + dataColor + promote.getPromoter() + infoColor + ", " + dataColor + promote.getPrevRank() + infoColor + " => " + dataColor + promote.getNewRank() + infoColor + " on " + dataColor + dateFormat.format(Long.valueOf(promote.getTimestamp())) + infoColor + ": " + promote.getReason());
+				sender.sendMessage(main.formatReport(main.displayStrings[2], promote.getId(), promote.getPromoted(), promote.getPromoter(), promote.getReason(), promote.getTimestamp(), promote.getPrevRank(), promote.getNewRank()));
 				break;
 			case DEMOTE:
 				Demotions demote = main.getDatabase().find(Demotions.class).where().eq("id", id).findUnique();
 
-				dataColor = ChatColor.AQUA.toString();
-				infoColor = ChatColor.RED.toString();
-
-				sender.sendMessage(dataColor + demote.getDemoted() + infoColor + ", by " + dataColor + demote.getDemoter() + infoColor + ", " + dataColor + demote.getPrevRank() + infoColor + " => " + dataColor + demote.getNewRank() + infoColor + " on " + dataColor + dateFormat.format(Long.valueOf(demote.getTimestamp())) + infoColor + ": " + demote.getReason());
+				sender.sendMessage(main.formatReport(main.displayStrings[3], demote.getId(), demote.getDemoted(), demote.getDemoter(), demote.getReason(), demote.getTimestamp(), demote.getPrevRank(), demote.getNewRank()));
 				break;
 			default:
 				sender.sendMessage(ChatColor.DARK_GRAY + "Unspecified action happened");
@@ -100,7 +77,7 @@ public class ReviewCommand implements CommandExecutor {
 
 		if (args.length <= 0) {
 			sender.sendMessage(ChatColor.GRAY + "Types: " + ChatColor.YELLOW + "Issue " + ChatColor.DARK_RED + "Ban " + ChatColor.DARK_GREEN + "Unban " + ChatColor.GREEN + "Promote " + ChatColor.RED + "Demote");
-			sender.sendMessage(ChatColor.GRAY + "Current date: " + dateFormat.format(Long.valueOf(System.currentTimeMillis())));
+			sender.sendMessage(ChatColor.GRAY + "Current date: " + main.dateFormat.format(Long.valueOf(System.currentTimeMillis())));
 			sender.sendMessage(ChatColor.GRAY + ChatColor.ITALIC.toString() + "All dates are MM-dd-yyyy");
 
 			List<Lists> lists = main.getDatabase().find(Lists.class).setMaxRows(10).orderBy("id DESC").findList();
@@ -121,7 +98,7 @@ public class ReviewCommand implements CommandExecutor {
 				}
 
 				sender.sendMessage(ChatColor.GRAY + "Types: " + ChatColor.YELLOW + "Issue " + ChatColor.DARK_RED + "Ban " + ChatColor.DARK_GREEN + "Unban " + ChatColor.GREEN + "Promote " + ChatColor.RED + "Demote");
-				sender.sendMessage(ChatColor.GRAY + "Current date: " + dateFormat.format(Long.valueOf(System.currentTimeMillis())));
+				sender.sendMessage(ChatColor.GRAY + "Current date: " + main.dateFormat.format(Long.valueOf(System.currentTimeMillis())));
 				sender.sendMessage(ChatColor.GRAY + ChatColor.ITALIC.toString() + "All dates are MM-dd-yyyy");
 
 				List<Lists> lists = main.getDatabase().find(Lists.class).setMaxRows(10).setFirstRow(page * 10).orderBy("id DESC").findList();
@@ -161,7 +138,7 @@ public class ReviewCommand implements CommandExecutor {
 				}
 
 				sender.sendMessage(ChatColor.GRAY + "Types: " + ChatColor.YELLOW + "Issue " + ChatColor.DARK_RED + "Ban " + ChatColor.DARK_GREEN + "Unban " + ChatColor.GREEN + "Promote " + ChatColor.RED + "Demote");
-				sender.sendMessage(ChatColor.GRAY + "Current date: " + dateFormat.format(Long.valueOf(System.currentTimeMillis())));
+				sender.sendMessage(ChatColor.GRAY + "Current date: " + main.dateFormat.format(Long.valueOf(System.currentTimeMillis())));
 				sender.sendMessage(ChatColor.GRAY + ChatColor.ITALIC.toString() + "All dates are MM-dd-yyyy");
 
 				List<Lists> lists = main.getDatabase().find(Lists.class).where().eq("reporter", name).setMaxRows(10).orderBy("id DESC").findList();
@@ -206,7 +183,7 @@ public class ReviewCommand implements CommandExecutor {
 					}
 
 					sender.sendMessage(ChatColor.GRAY + "Types: " + ChatColor.YELLOW + "Issue " + ChatColor.DARK_RED + "Ban " + ChatColor.DARK_GREEN + "Unban " + ChatColor.GREEN + "Promote " + ChatColor.RED + "Demote");
-					sender.sendMessage(ChatColor.GRAY + "Current date: " + dateFormat.format(Long.valueOf(System.currentTimeMillis())));
+					sender.sendMessage(ChatColor.GRAY + "Current date: " + main.dateFormat.format(Long.valueOf(System.currentTimeMillis())));
 					sender.sendMessage(ChatColor.GRAY + ChatColor.ITALIC.toString() + "All dates are MM-dd-yyyy");
 
 					List<Lists> lists = main.getDatabase().find(Lists.class).where().eq("reporter", name).setMaxRows(10).setFirstRow(page * 10).orderBy("id DESC").findList();
@@ -247,7 +224,7 @@ public class ReviewCommand implements CommandExecutor {
 				}
 
 				sender.sendMessage(ChatColor.GRAY + "Types: " + ChatColor.YELLOW + "Issue " + ChatColor.DARK_RED + "Ban " + ChatColor.DARK_GREEN + "Unban " + ChatColor.GREEN + "Promote " + ChatColor.RED + "Demote");
-				sender.sendMessage(ChatColor.GRAY + "Current date: " + dateFormat.format(Long.valueOf(System.currentTimeMillis())));
+				sender.sendMessage(ChatColor.GRAY + "Current date: " + main.dateFormat.format(Long.valueOf(System.currentTimeMillis())));
 				sender.sendMessage(ChatColor.GRAY + ChatColor.ITALIC.toString() + "All dates are MM-dd-yyyy");
 
 				List<Lists> lists = main.getDatabase().find(Lists.class).where().eq("target", name).setMaxRows(10).orderBy("id DESC").findList();
@@ -293,7 +270,7 @@ public class ReviewCommand implements CommandExecutor {
 					}
 
 					sender.sendMessage(ChatColor.GRAY + "Types: " + ChatColor.YELLOW + "Issue " + ChatColor.DARK_RED + "Ban " + ChatColor.DARK_GREEN + "Unban " + ChatColor.GREEN + "Promote " + ChatColor.RED + "Demote");
-					sender.sendMessage(ChatColor.GRAY + "Current date: " + dateFormat.format(Long.valueOf(System.currentTimeMillis())));
+					sender.sendMessage(ChatColor.GRAY + "Current date: " + main.dateFormat.format(Long.valueOf(System.currentTimeMillis())));
 					sender.sendMessage(ChatColor.GRAY + ChatColor.ITALIC.toString() + "All dates are MM-dd-yyyy");
 
 					List<Lists> lists = main.getDatabase().find(Lists.class).where().eq("target", name).setMaxRows(10).setFirstRow(page * 10).orderBy("id DESC").findList();
@@ -306,6 +283,43 @@ public class ReviewCommand implements CommandExecutor {
 		}
 
 		if (args[0].equalsIgnoreCase("close")) {
+			if (args.length == 1) {
+				sender.sendMessage(ChatColor.RED + "Not enough arguments to close reports");
+				return true;
+			}
+
+			for (int i = 1; i < args.length; i++) {
+				String[] idInfo = args[i].split(":");
+
+				if (idInfo.length != 2) {
+					sender.sendMessage(ChatColor.RED + "Argument '" + args[i] + "' is not in a valid format");
+					continue;
+				}
+
+				int id = 0;
+
+				try {
+					id = Integer.parseInt(idInfo[1]);
+				} catch (NumberFormatException ex) {
+					sender.sendMessage(ChatColor.RED + "'" + idInfo[1] + "' is not a valid number");
+					continue;
+				}
+
+				if (idInfo[0].equalsIgnoreCase("I")) {
+					Issues issue = main.getDatabase().find(Issues.class).where().eq("id", id).findUnique();
+
+					issue.setClosed(true);
+
+					main.getDatabase().update(issue);
+
+					sender.sendMessage(ChatColor.GREEN + "Closed issue id '" + ChatColor.AQUA + id + ChatColor.GREEN + "' by " + ChatColor.AQUA + issue.getReporter() + ChatColor.GREEN + ": " + ChatColor.AQUA + issue.getIssue());
+
+					continue;
+				}
+
+				sender.sendMessage(ChatColor.RED + "'" + idInfo[0] + "' is not a valid report type");
+				sender.sendMessage(ChatColor.RED + ChatColor.ITALIC.toString() + "Valid report types: I");
+			}
 
 			return true;
 		}
@@ -314,6 +328,7 @@ public class ReviewCommand implements CommandExecutor {
 			sender.sendMessage(ChatColor.GRAY + "/" + alias + " [page]");
 			sender.sendMessage(ChatColor.GRAY + "/" + alias + " by <playername> [page]");
 			sender.sendMessage(ChatColor.GRAY + "/" + alias + " target <playername> [page]");
+			sender.sendMessage(ChatColor.GRAY + "/" + alias + " close I:<id> [I:<id> [...]]");
 
 			return true;
 		}
