@@ -23,8 +23,7 @@ public class ReportCommand implements CommandExecutor {
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command,
-			String alias, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 		if (args.length <= 0) {
 			return false;
 		}
@@ -74,9 +73,13 @@ public class ReportCommand implements CommandExecutor {
 
 			main.getDatabase().save(issueRow);
 
-			Issues created = main.getDatabase().find(Issues.class).where().eq(
-					"timestamp", timeStamp).findUnique();
+			Issues created = main.getDatabase().find(Issues.class).where().eq("timestamp", timeStamp).findUnique();
 			report(created.getId(), ReportType.ISSUE, sender.getName(), name);
+
+			String reportString = main.formatReport(main.displayStrings[0], issueRow.getId(), issueRow.getReported(), issueRow.getReporter(), issueRow.getIssue(), issueRow.getTimestamp(), null, null);
+
+			main.getServer().broadcast(ChatColor.GRAY + sender.getName() + " reported a new issue.", "moderatorgui.viewreported");
+			main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
@@ -125,9 +128,13 @@ public class ReportCommand implements CommandExecutor {
 
 			main.getDatabase().save(banRow);
 
-			Bans created = main.getDatabase().find(Bans.class).where().eq(
-					"timestamp", timeStamp).findUnique();
+			Bans created = main.getDatabase().find(Bans.class).where().eq("timestamp", timeStamp).findUnique();
 			report(created.getId(), ReportType.BAN, sender.getName(), name);
+
+			String reportString = main.formatReport(main.displayStrings[0], banRow.getId(), banRow.getBanned(), banRow.getBanner(), banRow.getReason(), banRow.getTimestamp(), null, null);
+
+			main.getServer().broadcast(ChatColor.GRAY + sender.getName() + " reported a new ban.", "moderatorgui.viewreported");
+			main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
@@ -177,9 +184,13 @@ public class ReportCommand implements CommandExecutor {
 
 			main.getDatabase().save(unbanRow);
 
-			Unbans created = main.getDatabase().find(Unbans.class).where().eq(
-					"timestamp", timeStamp).findUnique();
+			Unbans created = main.getDatabase().find(Unbans.class).where().eq("timestamp", timeStamp).findUnique();
 			report(created.getId(), ReportType.UNBAN, sender.getName(), name);
+
+			String reportString = main.formatReport(main.displayStrings[0], unbanRow.getId(), unbanRow.getUnbanned(), unbanRow.getUnbanner(), unbanRow.getReason(), unbanRow.getTimestamp(), null, null);
+
+			main.getServer().broadcast(ChatColor.GRAY + sender.getName() + " reported a new unban.", "moderatorgui.viewreported");
+			main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
@@ -283,9 +294,13 @@ public class ReportCommand implements CommandExecutor {
 
 			main.getDatabase().save(promotionRow);
 
-			Promotions created = main.getDatabase().find(Promotions.class).where().eq(
-					"timestamp", timeStamp).findUnique();
+			Promotions created = main.getDatabase().find(Promotions.class).where().eq("timestamp", timeStamp).findUnique();
 			report(created.getId(), ReportType.PROMOTE, sender.getName(), name);
+
+			String reportString = main.formatReport(main.displayStrings[0], promotionRow.getId(), promotionRow.getPromoted(), promotionRow.getPromoter(), promotionRow.getReason(), promotionRow.getTimestamp(), promotionRow.getPrevRank(), promotionRow.getNewRank());
+
+			main.getServer().broadcast(ChatColor.GRAY + sender.getName() + " reported a new promotion.", "moderatorgui.viewreported");
+			main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
@@ -389,11 +404,15 @@ public class ReportCommand implements CommandExecutor {
 
 			main.getDatabase().save(demotionRow);
 
-			Demotions created = main.getDatabase().find(Demotions.class).where().eq(
-					"timestamp", timeStamp).findUnique();
+			Demotions created = main.getDatabase().find(Demotions.class).where().eq("timestamp", timeStamp).findUnique();
 			report(created.getId(), ReportType.DEMOTE, sender.getName(), name);
 
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
+
+			String reportString = main.formatReport(main.displayStrings[0], demotionRow.getId(), demotionRow.getDemoted(), demotionRow.getDemoter(), demotionRow.getReason(), demotionRow.getTimestamp(), demotionRow.getPrevRank(), demotionRow.getNewRank());
+
+			main.getServer().broadcast(ChatColor.GRAY + sender.getName() + " reported a new demotion.", "moderatorgui.viewreported");
+			main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
 			return true;
 		}
