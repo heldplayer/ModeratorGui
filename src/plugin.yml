@@ -26,6 +26,8 @@ permissions:
       moderatorgui.promote: true
       moderatorgui.demote: true
       moderatorgui.review: true
+      moderatorgui.viewreported: true
+      moderatorgui.viewopenissues: true
   moderatorgui.command:
     description: Allows using the plugin commands
   moderatorgui.issue:
