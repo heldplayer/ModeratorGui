@@ -54,11 +54,6 @@ public class ModeratorGui extends JavaPlugin {
 
 		ranks = config.getStringList("ranks");
 
-		getCommand("report").setExecutor(new ReportCommand(this));
-		getCommand("review").setExecutor(new ReviewCommand(this));
-
-		serverThread = new ThreadWebserver(config.getInt("port", 8273), config.getString("host", ""));
-
 		if (!config.isSet("config-version")) {
 			config.set("config-version", 1);
 		}
@@ -78,7 +73,7 @@ public class ModeratorGui extends JavaPlugin {
 		}
 
 		config.set("config-version", version);
-		
+
 		displayStrings[0] = config.getString("messages.issue");
 		displayStrings[1] = config.getString("messages.resolved-issue");
 		displayStrings[2] = config.getString("messages.promotion");
@@ -87,7 +82,14 @@ public class ModeratorGui extends JavaPlugin {
 		displayStrings[5] = config.getString("messages.unban");
 
 		saveConfig();
-		
+
+		serverThread = new ThreadWebserver(config.getInt("port", 8273), config.getString("host", ""));
+
+		getServer().getPluginManager().registerEvents(new ModGuiListener(this), this);
+
+		getCommand("report").setExecutor(new ReportCommand(this));
+		getCommand("review").setExecutor(new ReviewCommand(this));
+
 		dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 
 		getLogger().info("Enabled!");
@@ -122,7 +124,7 @@ public class ModeratorGui extends JavaPlugin {
 		list.add(Lists.class);
 		return list;
 	}
-	
+
 	public String formatReport(String patern, int id, String target, String reporter, String reason, long date, String oldRank, String newRank) {
 		String result = patern;
 
