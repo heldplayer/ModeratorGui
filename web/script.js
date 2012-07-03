@@ -154,6 +154,11 @@ function outputData(data) {
 		element.innerHTML += "<td class=\"reason\">" + row["reason"] + "</td>";
 		element.innerHTML += "<td class=\"time\">" + row["time"] + "</td>";
 
+		if (row["type"] == "issue" && row["closed"] == true) {
+			element
+					.setAttribute("class", "report " + row["type"] + (i % 2 == 0 ? "" : " second") + " closed");
+		}
+
 		if (row["type"] == "promote") {
 			element.innerHTML += "<td class=\"prev\">" + row["prev"] + "</td>";
 			element.innerHTML += "<td class=\"new\">" + row["new"] + "</td>";

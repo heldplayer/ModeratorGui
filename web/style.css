@@ -116,3 +116,11 @@ th .type {
 .unban .type {
 	background-color: #00aa00 !important;
 }
+
+.closed {
+	text-decoration: line-through;
+}
+
+.closed .type {
+	background-color: #aaaaaa !important;
+}
