@@ -124,6 +124,7 @@ public class ReporterResponse extends WebResponse {
 
 				result = "{ ";
 				result += "type: \"issue\", ";
+				result += "closed: " + (issue.isClosed() ? "true" : "false") + ", ";
 				result += "reporter: \"" + JSONObject.escape(issue.getReporter()) + "\", ";
 				result += "reported: \"" + JSONObject.escape(issue.getReported()) + "\", ";
 				result += "time: \"" + JSONObject.escape(dateFormat.format(Long.valueOf(issue.getTimestamp()))) + "\", ";
