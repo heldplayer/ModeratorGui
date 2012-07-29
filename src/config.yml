@@ -15,10 +15,10 @@ messages:
   unban: "&2[U:%id%] &b%target%&2, by &b%reporter%&2 on &b%date%&2: %reason%"
 perform:
   issue:
-  promotion:
-    - C:permissions player setrank %newrank%
-  demotion:
-    - C:permissions player setrank %newrank%
+  promote:
+    - C:permissions player setgroup %target% %newrank%
+  demote:
+    - C:permissions player setgroup %target% %newrank%
   ban:
     - P:/ban %target% %reason%
   unban:

@@ -16,8 +16,10 @@ import me.heldplayer.ModeratorGui.tables.Unbans;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,9 +31,10 @@ public class ModeratorGui extends JavaPlugin {
 	public List<String> ranks;
 	private ThreadWebserver serverThread;
 	public static ModeratorGui instance;
-	public static final int version = 3;
+	public static final int version = 4;
 	public String[] displayStrings = new String[6];
 	public SimpleDateFormat dateFormat;
+	private FileConfiguration config = null;
 
 	@Override
 	public void onDisable() {
@@ -48,7 +51,7 @@ public class ModeratorGui extends JavaPlugin {
 
 		pdf = getDescription();
 
-		FileConfiguration config = getConfig();
+		config = getConfig();
 
 		FileConfiguration defConfig = YamlConfiguration.loadConfiguration(getResource("config.yml"));
 
@@ -71,7 +74,7 @@ public class ModeratorGui extends JavaPlugin {
 
 			config.set("messages", defConfig.get("messages"));
 		}
-		
+
 		if (config.getInt("config-version") < 4) {
 			getServer().getConsoleSender().sendMessage("[" + pdf.getPrefix() + "] " + ChatColor.LIGHT_PURPLE + "Updating config file for for ModeratorGui 1.3");
 
@@ -145,6 +148,28 @@ public class ModeratorGui extends JavaPlugin {
 		result = ChatColor.translateAlternateColorCodes('&', result);
 
 		return result;
+	}
+
+	public void performCommands(String section, CommandSender sender, int id, String target, String reporter, String reason, long date, String oldRank, String newRank) {
+		List<?> commands = config.getList("perform." + section);
+
+		for (Object commandObj : commands) {
+			String command = (String) commandObj;
+			
+			command = formatReport(command, id, target, reporter, reason, date, oldRank, newRank);
+
+			if (command.startsWith("C:")) {
+				getServer().dispatchCommand(getServer().getConsoleSender(), command.substring(2));
+			} else if (command.startsWith("P:")) {
+				if (sender instanceof Player) {
+					getServer().dispatchCommand(sender, command.substring(2));
+				} else {
+					getServer().dispatchCommand(sender, command.substring(3));
+				}
+			} else {
+				getServer().dispatchCommand(sender, command);
+			}
+		}
 	}
 
 	public static List<String> getPlayerMatches(String name) {
