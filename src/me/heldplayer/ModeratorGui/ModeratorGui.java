@@ -71,6 +71,12 @@ public class ModeratorGui extends JavaPlugin {
 
 			config.set("messages", defConfig.get("messages"));
 		}
+		
+		if (config.getInt("config-version") < 4) {
+			getServer().getConsoleSender().sendMessage("[" + pdf.getPrefix() + "] " + ChatColor.LIGHT_PURPLE + "Updating config file for for ModeratorGui 1.3");
+
+			config.set("perform", defConfig.get("perform"));
+		}
 
 		config.set("config-version", version);
 
