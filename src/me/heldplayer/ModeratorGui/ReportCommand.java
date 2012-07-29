@@ -131,7 +131,7 @@ public class ReportCommand implements CommandExecutor {
 			Bans created = main.getDatabase().find(Bans.class).where().eq("timestamp", timeStamp).findUnique();
 			report(created.getId(), ReportType.BAN, sender.getName(), name);
 
-			String reportString = main.formatReport(main.displayStrings[0], banRow.getId(), banRow.getBanned(), banRow.getBanner(), banRow.getReason(), banRow.getTimestamp(), null, null);
+			String reportString = main.formatReport(main.displayStrings[4], banRow.getId(), banRow.getBanned(), banRow.getBanner(), banRow.getReason(), banRow.getTimestamp(), null, null);
 
 			main.getServer().broadcast(ChatColor.GRAY + sender.getName() + " reported a new ban.", "moderatorgui.viewreported");
 			main.getServer().broadcast(reportString, "moderatorgui.viewreported");
@@ -187,7 +187,7 @@ public class ReportCommand implements CommandExecutor {
 			Unbans created = main.getDatabase().find(Unbans.class).where().eq("timestamp", timeStamp).findUnique();
 			report(created.getId(), ReportType.UNBAN, sender.getName(), name);
 
-			String reportString = main.formatReport(main.displayStrings[0], unbanRow.getId(), unbanRow.getUnbanned(), unbanRow.getUnbanner(), unbanRow.getReason(), unbanRow.getTimestamp(), null, null);
+			String reportString = main.formatReport(main.displayStrings[5], unbanRow.getId(), unbanRow.getUnbanned(), unbanRow.getUnbanner(), unbanRow.getReason(), unbanRow.getTimestamp(), null, null);
 
 			main.getServer().broadcast(ChatColor.GRAY + sender.getName() + " reported a new unban.", "moderatorgui.viewreported");
 			main.getServer().broadcast(reportString, "moderatorgui.viewreported");
@@ -297,7 +297,7 @@ public class ReportCommand implements CommandExecutor {
 			Promotions created = main.getDatabase().find(Promotions.class).where().eq("timestamp", timeStamp).findUnique();
 			report(created.getId(), ReportType.PROMOTE, sender.getName(), name);
 
-			String reportString = main.formatReport(main.displayStrings[0], promotionRow.getId(), promotionRow.getPromoted(), promotionRow.getPromoter(), promotionRow.getReason(), promotionRow.getTimestamp(), promotionRow.getPrevRank(), promotionRow.getNewRank());
+			String reportString = main.formatReport(main.displayStrings[2], promotionRow.getId(), promotionRow.getPromoted(), promotionRow.getPromoter(), promotionRow.getReason(), promotionRow.getTimestamp(), promotionRow.getPrevRank(), promotionRow.getNewRank());
 
 			main.getServer().broadcast(ChatColor.GRAY + sender.getName() + " reported a new promotion.", "moderatorgui.viewreported");
 			main.getServer().broadcast(reportString, "moderatorgui.viewreported");
@@ -409,7 +409,7 @@ public class ReportCommand implements CommandExecutor {
 
 			sender.sendMessage(ChatColor.GREEN + "Reported!");
 
-			String reportString = main.formatReport(main.displayStrings[0], demotionRow.getId(), demotionRow.getDemoted(), demotionRow.getDemoter(), demotionRow.getReason(), demotionRow.getTimestamp(), demotionRow.getPrevRank(), demotionRow.getNewRank());
+			String reportString = main.formatReport(main.displayStrings[3], demotionRow.getId(), demotionRow.getDemoted(), demotionRow.getDemoter(), demotionRow.getReason(), demotionRow.getTimestamp(), demotionRow.getPrevRank(), demotionRow.getNewRank());
 
 			main.getServer().broadcast(ChatColor.GRAY + sender.getName() + " reported a new demotion.", "moderatorgui.viewreported");
 			main.getServer().broadcast(reportString, "moderatorgui.viewreported");
