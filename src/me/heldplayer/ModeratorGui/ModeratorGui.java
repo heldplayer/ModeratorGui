@@ -31,7 +31,7 @@ public class ModeratorGui extends JavaPlugin {
 	public List<String> ranks;
 	private ThreadWebserver serverThread;
 	public static ModeratorGui instance;
-	public static final int version = 4;
+	public static final int version = 5;
 	public String[] displayStrings = new String[6];
 	public SimpleDateFormat dateFormat;
 	private FileConfiguration config = null;
@@ -81,6 +81,12 @@ public class ModeratorGui extends JavaPlugin {
 			config.set("perform", defConfig.get("perform"));
 		}
 
+		if (config.getInt("config-version") < 5) {
+			getServer().getConsoleSender().sendMessage("[" + pdf.getPrefix() + "] " + ChatColor.LIGHT_PURPLE + "Updating config file for for ModeratorGui 1.3");
+
+			config.set("enable-webserver", defConfig.get("enable-webserver"));
+		}
+
 		config.set("config-version", version);
 
 		displayStrings[0] = config.getString("messages.issue");
@@ -93,6 +99,10 @@ public class ModeratorGui extends JavaPlugin {
 		saveConfig();
 
 		serverThread = new ThreadWebserver(config.getInt("port", 8273), config.getString("host", ""));
+
+		if (config.getBoolean("enable-webserver")) {
+			serverThread.startup();
+		}
 
 		getServer().getPluginManager().registerEvents(new ModGuiListener(this), this);
 

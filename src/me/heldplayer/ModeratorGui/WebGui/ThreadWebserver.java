@@ -11,7 +11,7 @@ import me.heldplayer.ModeratorGui.ModeratorGui;
 
 public class ThreadWebserver extends Thread {
 	private ServerSocket serverSocket = null;
-	public boolean running = true;
+	public boolean running = false;
 	public static ThreadWebserver instance;
 	private HashSet<String> sessions;
 	private Random rand;
@@ -29,6 +29,11 @@ public class ThreadWebserver extends Thread {
 
 		this.setDaemon(true);
 		this.start();
+	}
+
+	public void startup() {
+		this.start();
+		running = true;
 	}
 
 	public synchronized void disconnect() {
@@ -60,8 +65,7 @@ public class ThreadWebserver extends Thread {
 	@Override
 	public void run() {
 		try {
-			ModeratorGui.instance.getLogger().info(
-					"Starting server on " + (host != "" ? host : "*") + ":" + port);
+			ModeratorGui.instance.getLogger().info("Starting server on " + (host != "" ? host : "*") + ":" + port);
 
 			InetAddress adress = null;
 
@@ -71,12 +75,9 @@ public class ThreadWebserver extends Thread {
 
 			serverSocket = new ServerSocket(port, 0, adress);
 		} catch (Exception ex) {
-			ModeratorGui.instance.getLogger().severe(
-					"**** FAILED TO BIND TO PORT");
-			ModeratorGui.instance.getLogger().severe(
-					"The exception was: " + ex.toString());
-			ModeratorGui.instance.getLogger().severe(
-					"Perhaps a server is already running on that port?");
+			ModeratorGui.instance.getLogger().severe("**** FAILED TO BIND TO PORT");
+			ModeratorGui.instance.getLogger().severe("The exception was: " + ex.toString());
+			ModeratorGui.instance.getLogger().severe("Perhaps a server is already running on that port?");
 			return;
 		}
 

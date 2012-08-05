@@ -5,7 +5,8 @@ ranks:
 web-password: somepassword
 port: 8273
 server-ip: 
-config-version: 4
+enable-webserver: true
+config-version: 5
 messages:
   issue: "&e[I:%id%] &b%target%&e, by &b%reporter%&e on &b%date%&e: %reason%"
   resolved-issue: "&e[I:%id%] &b&m%target%&e&m, by &b&m%reporter%&e&m on &b&m%date%&e&m: %reason%"
