@@ -153,9 +153,13 @@ public class ModeratorGui extends JavaPlugin {
 	public void performCommands(String section, CommandSender sender, int id, String target, String reporter, String reason, long date, String oldRank, String newRank) {
 		List<?> commands = config.getList("perform." + section);
 
+		if (commands == null) {
+			return;
+		}
+
 		for (Object commandObj : commands) {
 			String command = (String) commandObj;
-			
+
 			command = formatReport(command, id, target, reporter, reason, date, oldRank, newRank);
 
 			if (command.startsWith("C:")) {
