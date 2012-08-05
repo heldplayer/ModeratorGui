@@ -82,7 +82,7 @@ public class ModeratorGui extends JavaPlugin {
 		}
 
 		if (config.getInt("config-version") < 5) {
-			getServer().getConsoleSender().sendMessage("[" + pdf.getPrefix() + "] " + ChatColor.LIGHT_PURPLE + "Updating config file for for ModeratorGui 1.3");
+			getServer().getConsoleSender().sendMessage("[" + pdf.getPrefix() + "] " + ChatColor.LIGHT_PURPLE + "Updating config file for for ModeratorGui 1.4");
 
 			config.set("enable-webserver", defConfig.get("enable-webserver"));
 		}
