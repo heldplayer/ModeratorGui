@@ -28,7 +28,6 @@ public class ThreadWebserver extends Thread {
 		this.host = host;
 
 		this.setDaemon(true);
-		this.start();
 	}
 
 	public void startup() {
