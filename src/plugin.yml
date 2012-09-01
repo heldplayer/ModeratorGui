@@ -8,11 +8,11 @@ prefix: ModGui
 commands:
   report:
     description: Main command for reporting moderation stuff
-    permissions: moderatorgui.command
+    permission: moderatorgui.command
     usage: /<command> help
   review:
     description: Main command for reviewing moderation stuff
-    permissions: moderatorgui.command
+    permission: moderatorgui.command
     usage: /<command> help
 permissions:
   moderatorgui:
