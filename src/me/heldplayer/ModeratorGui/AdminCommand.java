@@ -33,15 +33,17 @@ public class AdminCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 		if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
-			sender.sendMessage(ChatColor.GRAY + "/" + alias + " export");
-			sender.sendMessage(ChatColor.GRAY + "/" + alias + " import " + ChatColor.DARK_RED + "WARNING: Clears the current database and replaces it with the contents of 'data.bin'");
-			sender.sendMessage(ChatColor.GRAY + "/" + alias + " uninstall " + ChatColor.DARK_RED + "WARNING: Deletes database and disables the plugin, the plugin will need to be manually removed after server shutdown");
-			sender.sendMessage(ChatColor.GRAY + "/" + alias + " close I:<id> [I:<id> [...]]");
+			if (sender.hasPermission("moderatorgui.export"))
+				sender.sendMessage(ChatColor.GRAY + "/" + alias + " export");
+			if (sender.hasPermission("moderatorgui.import"))
+				sender.sendMessage(ChatColor.GRAY + "/" + alias + " import " + ChatColor.DARK_RED + "WARNING: Clears the current database and replaces it with the contents of 'data.bin'");
+			if (sender.hasPermission("moderatorgui.uninstall"))
+				sender.sendMessage(ChatColor.GRAY + "/" + alias + " uninstall " + ChatColor.DARK_RED + "WARNING: Deletes database and disables the plugin, the plugin will need to be manually removed after server shutdown");
 
 			return true;
 		}
 
-		if (args[0].equalsIgnoreCase("export")) {
+		if (args[0].equalsIgnoreCase("export") && sender.hasPermission("moderatorgui.export")) {
 			try {
 				sender.sendMessage(ChatColor.GRAY + "Exporting database to /plugins/ModeratorGui/data.bin");
 
@@ -118,7 +120,7 @@ public class AdminCommand implements CommandExecutor {
 			return true;
 		}
 
-		if (args[0].equalsIgnoreCase("import")) {
+		if (args[0].equalsIgnoreCase("import") && sender.hasPermission("moderatorgui.import")) {
 			try {
 				FileInputStream FIS = new FileInputStream(new File(main.getDataFolder(), "data.bin"));
 
@@ -214,7 +216,7 @@ public class AdminCommand implements CommandExecutor {
 			return true;
 		}
 
-		if (args[0].equalsIgnoreCase("uninstall")) {
+		if (args[0].equalsIgnoreCase("uninstall") && sender.hasPermission("moderatorgui.uninstall")) {
 			sender.sendMessage(ChatColor.RED + "Deleting database...");
 			main.getLogger().info("Deleting database by user command, command executed by " + sender.getName());
 

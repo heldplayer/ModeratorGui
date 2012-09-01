@@ -36,6 +36,7 @@ permissions:
       moderatorgui.viewopenissues: true
       moderatorgui.export: true
       moderatorgui.import: true
+      moderatorgui.uninstall: true
   moderatorgui.command:
     description: Allows using the plugin commands
   moderatorgui.command.admin:
@@ -60,3 +61,5 @@ permissions:
     description: Allows exporting all reports to a binary file
   moderatorgui.import:
     description: Allows importing all reports from a binary file
+  moderatorgui.uninstall:
+    description: Allows deleting the database
