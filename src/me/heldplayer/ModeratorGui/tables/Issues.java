@@ -1,5 +1,9 @@
 package me.heldplayer.ModeratorGui.tables;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -78,4 +82,27 @@ public class Issues {
 	public void setClosed(boolean isClosed) {
 		this.isClosed = isClosed;
 	}
+
+	public void toData(DataOutputStream DOS) throws IOException {
+		DOS.writeInt(id);
+		DOS.writeUTF(reporter);
+		DOS.writeUTF(reported);
+		DOS.writeUTF(issue);
+		DOS.writeLong(timestamp);
+		DOS.writeBoolean(isClosed);
+	}
+
+	public static Issues fromData(DataInputStream DIS) throws IOException {
+		Issues row = new Issues();
+
+		row.id = DIS.readInt();
+		row.reporter = DIS.readUTF();
+		row.reported = DIS.readUTF();
+		row.issue = DIS.readUTF();
+		row.timestamp = DIS.readLong();
+		row.isClosed = DIS.readBoolean();
+
+		return row;
+	}
+
 }

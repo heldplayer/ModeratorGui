@@ -1,5 +1,9 @@
 package me.heldplayer.ModeratorGui.tables;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -92,4 +96,29 @@ public class Promotions {
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
+
+	public void toData(DataOutputStream DOS) throws IOException {
+		DOS.writeInt(id);
+		DOS.writeUTF(promoter);
+		DOS.writeUTF(promoted);
+		DOS.writeUTF(reason);
+		DOS.writeUTF(prevRank);
+		DOS.writeUTF(newRank);
+		DOS.writeLong(timestamp);
+	}
+
+	public static Promotions fromData(DataInputStream DIS) throws IOException {
+		Promotions row = new Promotions();
+
+		row.id = DIS.readInt();
+		row.promoter = DIS.readUTF();
+		row.promoted = DIS.readUTF();
+		row.reason = DIS.readUTF();
+		row.prevRank = DIS.readUTF();
+		row.newRank = DIS.readUTF();
+		row.timestamp = DIS.readLong();
+
+		return row;
+	}
+
 }

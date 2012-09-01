@@ -47,7 +47,18 @@ public class ModeratorGui extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 
-		setupDatabase();
+		try {
+			setupDatabase();
+		} catch (Exception ex) {
+			getLogger().severe("Unable to set up the database!");
+			getLogger().severe("If you updated from an older version, please follow these steps:");
+			getLogger().severe("1. Downgrade to the previous version of ModeratorGui");
+			getLogger().severe("2. Use the command '/moderatorgui export'");
+			getLogger().severe("3. Update back to the latest version of ModeratorGui for your craftbukkit version");
+			getLogger().severe("4. Use the command '/moderatorgui import'");
+			getLogger().severe("If the problem persists or you have not yet used ModeratorGui, please post the following in the official BukkitDev plugin page: ");
+			ex.printStackTrace();
+		}
 
 		pdf = getDescription();
 
@@ -58,7 +69,7 @@ public class ModeratorGui extends JavaPlugin {
 		ranks = config.getStringList("ranks");
 
 		if (!config.isSet("config-version")) {
-			config.set("config-version", 1);
+			config.set("config-version", version);
 		}
 
 		if (config.getInt("config-version") < 2) {
@@ -108,13 +119,14 @@ public class ModeratorGui extends JavaPlugin {
 
 		getCommand("report").setExecutor(new ReportCommand(this));
 		getCommand("review").setExecutor(new ReviewCommand(this));
+		getCommand("moderatorgui").setExecutor(new AdminCommand(this));
 
 		dateFormat = new SimpleDateFormat("MM-dd-yyyy");
 
 		getLogger().info("Enabled!");
 	}
 
-	private void setupDatabase() {
+	protected void setupDatabase() {
 		try {
 			getDatabase().find(Issues.class).findRowCount();
 			getDatabase().find(Bans.class).findRowCount();
@@ -123,13 +135,14 @@ public class ModeratorGui extends JavaPlugin {
 			getDatabase().find(Demotions.class).findRowCount();
 			getDatabase().find(Lists.class).findRowCount();
 		} catch (PersistenceException ex) {
-			getLogger().info("Installing database due to first time usage");
-			try {
-				installDDL();
-			} catch (Exception ex2) {
-				getLogger().severe("Unable to set up the database!");
-			}
+			getLogger().info("Installing database...");
+
+			installDDL();
 		}
+	}
+
+	protected void deleteDatabase() {
+		removeDDL();
 	}
 
 	@Override

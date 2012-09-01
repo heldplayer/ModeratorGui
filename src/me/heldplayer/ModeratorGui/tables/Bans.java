@@ -1,5 +1,9 @@
 package me.heldplayer.ModeratorGui.tables;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -68,4 +72,25 @@ public class Bans {
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
+
+	public void toData(DataOutputStream DOS) throws IOException {
+		DOS.writeInt(id);
+		DOS.writeUTF(banner);
+		DOS.writeUTF(banned);
+		DOS.writeUTF(reason);
+		DOS.writeLong(timestamp);
+	}
+
+	public static Bans fromData(DataInputStream DIS) throws IOException {
+		Bans row = new Bans();
+
+		row.id = DIS.readInt();
+		row.banner = DIS.readUTF();
+		row.banned = DIS.readUTF();
+		row.reason = DIS.readUTF();
+		row.timestamp = DIS.readLong();
+
+		return row;
+	}
+
 }
