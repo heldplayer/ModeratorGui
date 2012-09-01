@@ -20,11 +20,11 @@ public class Unbans {
 
 	@Length(max = 16)
 	@NotNull
-	private String unbanner;
+	private String reporter;
 
 	@Length(max = 16)
 	@NotNull
-	private String unbanned;
+	private String reported;
 
 	@Length(max = 256)
 	@NotNull
@@ -41,20 +41,20 @@ public class Unbans {
 		this.id = id;
 	}
 
-	public String getUnbanner() {
-		return unbanner;
+	public String getReporter() {
+		return reporter;
 	}
 
-	public void setUnbanner(String banner) {
-		this.unbanner = banner;
+	public void setReporter(String reporter) {
+		this.reporter = reporter;
 	}
 
-	public String getUnbanned() {
-		return unbanned;
+	public String getReported() {
+		return reported;
 	}
 
-	public void setUnbanned(String banned) {
-		this.unbanned = banned;
+	public void setReported(String reported) {
+		this.reported = reported;
 	}
 
 	public String getReason() {
@@ -75,8 +75,8 @@ public class Unbans {
 
 	public void toData(DataOutputStream DOS) throws IOException {
 		DOS.writeInt(id);
-		DOS.writeUTF(unbanner);
-		DOS.writeUTF(unbanned);
+		DOS.writeUTF(reporter);
+		DOS.writeUTF(reported);
 		DOS.writeUTF(reason);
 		DOS.writeLong(timestamp);
 	}
@@ -85,8 +85,8 @@ public class Unbans {
 		Unbans row = new Unbans();
 
 		row.id = DIS.readInt();
-		row.unbanner = DIS.readUTF();
-		row.unbanned = DIS.readUTF();
+		row.reporter = DIS.readUTF();
+		row.reported = DIS.readUTF();
 		row.reason = DIS.readUTF();
 		row.timestamp = DIS.readLong();
 

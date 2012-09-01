@@ -20,11 +20,11 @@ public class Bans {
 
 	@Length(max = 16)
 	@NotNull
-	private String banner;
+	private String reporter;
 
 	@Length(max = 16)
 	@NotNull
-	private String banned;
+	private String reported;
 
 	@Length(max = 256)
 	@NotNull
@@ -41,20 +41,20 @@ public class Bans {
 		this.id = id;
 	}
 
-	public String getBanner() {
-		return banner;
+	public String getReporter() {
+		return reporter;
 	}
 
-	public void setBanner(String banner) {
-		this.banner = banner;
+	public void setReporter(String reporter) {
+		this.reporter = reporter;
 	}
 
-	public String getBanned() {
-		return banned;
+	public String getReported() {
+		return reported;
 	}
 
-	public void setBanned(String banned) {
-		this.banned = banned;
+	public void setReported(String reported) {
+		this.reported = reported;
 	}
 
 	public String getReason() {
@@ -75,8 +75,8 @@ public class Bans {
 
 	public void toData(DataOutputStream DOS) throws IOException {
 		DOS.writeInt(id);
-		DOS.writeUTF(banner);
-		DOS.writeUTF(banned);
+		DOS.writeUTF(reporter);
+		DOS.writeUTF(reported);
 		DOS.writeUTF(reason);
 		DOS.writeLong(timestamp);
 	}
@@ -85,8 +85,8 @@ public class Bans {
 		Bans row = new Bans();
 
 		row.id = DIS.readInt();
-		row.banner = DIS.readUTF();
-		row.banned = DIS.readUTF();
+		row.reporter = DIS.readUTF();
+		row.reported = DIS.readUTF();
 		row.reason = DIS.readUTF();
 		row.timestamp = DIS.readLong();
 

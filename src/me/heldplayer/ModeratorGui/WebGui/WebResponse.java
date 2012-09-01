@@ -16,8 +16,7 @@ public abstract class WebResponse {
 		dop = new DataOutputStream(pop);
 	}
 
-	public abstract WebResponse writeResponse(RequestFlags flags)
-			throws IOException;
+	public abstract WebResponse writeResponse(RequestFlags flags) throws IOException;
 
 	public void flush(DataOutputStream stream) throws IOException {
 		try {

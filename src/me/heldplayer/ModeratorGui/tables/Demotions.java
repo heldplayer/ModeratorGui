@@ -20,11 +20,11 @@ public class Demotions {
 
 	@Length(max = 16)
 	@NotNull
-	private String demoter;
+	private String reporter;
 
 	@Length(max = 16)
 	@NotNull
-	private String demoted;
+	private String reported;
 
 	@Length(max = 256)
 	@NotNull
@@ -49,20 +49,20 @@ public class Demotions {
 		this.id = id;
 	}
 
-	public String getDemoter() {
-		return demoter;
+	public String getReporter() {
+		return reporter;
 	}
 
-	public void setDemoter(String demoter) {
-		this.demoter = demoter;
+	public void setReporter(String reporter) {
+		this.reporter = reporter;
 	}
 
-	public String getDemoted() {
-		return demoted;
+	public String getReported() {
+		return reported;
 	}
 
-	public void setDemoted(String demoted) {
-		this.demoted = demoted;
+	public void setReported(String reported) {
+		this.reported = reported;
 	}
 
 	public String getReason() {
@@ -99,8 +99,8 @@ public class Demotions {
 
 	public void toData(DataOutputStream DOS) throws IOException {
 		DOS.writeInt(id);
-		DOS.writeUTF(demoter);
-		DOS.writeUTF(demoted);
+		DOS.writeUTF(reporter);
+		DOS.writeUTF(reported);
 		DOS.writeUTF(reason);
 		DOS.writeUTF(prevRank);
 		DOS.writeUTF(newRank);
@@ -111,8 +111,8 @@ public class Demotions {
 		Demotions row = new Demotions();
 
 		row.id = DIS.readInt();
-		row.demoter = DIS.readUTF();
-		row.demoted = DIS.readUTF();
+		row.reporter = DIS.readUTF();
+		row.reported = DIS.readUTF();
 		row.reason = DIS.readUTF();
 		row.prevRank = DIS.readUTF();
 		row.newRank = DIS.readUTF();

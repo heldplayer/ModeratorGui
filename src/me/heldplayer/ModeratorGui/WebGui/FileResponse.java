@@ -40,10 +40,7 @@ public class FileResponse extends WebResponse {
 	}
 
 	private static enum Extension {
-		TextPlain("text/plain"),
-		TextHtml("text/html"),
-		TextCss("text/css"),
-		TextJavascript("text/javascript");
+		TextPlain("text/plain"), TextHtml("text/html"), TextCss("text/css"), TextJavascript("text/javascript");
 		public final String type;
 
 		private Extension(String type) {

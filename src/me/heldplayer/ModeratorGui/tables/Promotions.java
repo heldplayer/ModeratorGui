@@ -20,11 +20,11 @@ public class Promotions {
 
 	@Length(max = 16)
 	@NotNull
-	private String promoter;
+	private String reporter;
 
 	@Length(max = 16)
 	@NotNull
-	private String promoted;
+	private String reported;
 
 	@Length(max = 256)
 	@NotNull
@@ -49,20 +49,20 @@ public class Promotions {
 		this.id = id;
 	}
 
-	public String getPromoter() {
-		return promoter;
+	public String getReporter() {
+		return reporter;
 	}
 
-	public void setPromoter(String promoter) {
-		this.promoter = promoter;
+	public void setReporter(String reporter) {
+		this.reporter = reporter;
 	}
 
-	public String getPromoted() {
-		return promoted;
+	public String getReported() {
+		return reported;
 	}
 
-	public void setPromoted(String promoted) {
-		this.promoted = promoted;
+	public void setReported(String reported) {
+		this.reported = reported;
 	}
 
 	public String getReason() {
@@ -99,8 +99,8 @@ public class Promotions {
 
 	public void toData(DataOutputStream DOS) throws IOException {
 		DOS.writeInt(id);
-		DOS.writeUTF(promoter);
-		DOS.writeUTF(promoted);
+		DOS.writeUTF(reporter);
+		DOS.writeUTF(reported);
 		DOS.writeUTF(reason);
 		DOS.writeUTF(prevRank);
 		DOS.writeUTF(newRank);
@@ -111,8 +111,8 @@ public class Promotions {
 		Promotions row = new Promotions();
 
 		row.id = DIS.readInt();
-		row.promoter = DIS.readUTF();
-		row.promoted = DIS.readUTF();
+		row.reporter = DIS.readUTF();
+		row.reported = DIS.readUTF();
 		row.reason = DIS.readUTF();
 		row.prevRank = DIS.readUTF();
 		row.newRank = DIS.readUTF();

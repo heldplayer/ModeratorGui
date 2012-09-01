@@ -29,8 +29,7 @@ public class LoginResponse extends WebResponse {
 		} catch (NoSuchAlgorithmException e) {
 			throw new InternalServerException(e);
 		}
-		String text = ModeratorGui.instance.getConfig().getString(
-				"web-password");
+		String text = ModeratorGui.instance.getConfig().getString("web-password");
 
 		md.update(text.getBytes("UTF-8")); // Change this to "UTF-16" if needed
 		byte[] digest = md.digest();

@@ -154,32 +154,32 @@ public class AdminCommand implements CommandExecutor {
 					case BAN:
 						Bans ban = Bans.fromData(DIS);
 
-						reporter = ban.getBanner();
-						target = ban.getBanned();
+						reporter = ban.getReporter();
+						target = ban.getReported();
 
 						main.getDatabase().insert(ban);
 						break;
 					case UNBAN:
 						Unbans unban = Unbans.fromData(DIS);
 
-						reporter = unban.getUnbanner();
-						target = unban.getUnbanned();
+						reporter = unban.getReporter();
+						target = unban.getReported();
 
 						main.getDatabase().insert(unban);
 						break;
 					case PROMOTE:
 						Promotions promote = Promotions.fromData(DIS);
 
-						reporter = promote.getPromoter();
-						target = promote.getPromoted();
+						reporter = promote.getReporter();
+						target = promote.getReported();
 
 						main.getDatabase().insert(promote);
 						break;
 					case DEMOTE:
 						Demotions demote = Demotions.fromData(DIS);
 
-						reporter = demote.getDemoter();
-						target = demote.getDemoted();
+						reporter = demote.getReporter();
+						target = demote.getReported();
 
 						main.getDatabase().insert(demote);
 						break;

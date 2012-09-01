@@ -44,22 +44,22 @@ public class ReviewCommand implements CommandExecutor {
 			case BAN:
 				Bans ban = main.getDatabase().find(Bans.class).where().eq("id", id).findUnique();
 
-				sender.sendMessage(main.formatReport(main.displayStrings[4], ban.getId(), ban.getBanned(), ban.getBanner(), ban.getReason(), ban.getTimestamp(), null, null));
+				sender.sendMessage(main.formatReport(main.displayStrings[4], ban.getId(), ban.getReported(), ban.getReporter(), ban.getReason(), ban.getTimestamp(), null, null));
 				break;
 			case UNBAN:
 				Unbans unban = main.getDatabase().find(Unbans.class).where().eq("id", id).findUnique();
 
-				sender.sendMessage(main.formatReport(main.displayStrings[5], unban.getId(), unban.getUnbanned(), unban.getUnbanner(), unban.getReason(), unban.getTimestamp(), null, null));
+				sender.sendMessage(main.formatReport(main.displayStrings[5], unban.getId(), unban.getReported(), unban.getReporter(), unban.getReason(), unban.getTimestamp(), null, null));
 				break;
 			case PROMOTE:
 				Promotions promote = main.getDatabase().find(Promotions.class).where().eq("id", id).findUnique();
 
-				sender.sendMessage(main.formatReport(main.displayStrings[2], promote.getId(), promote.getPromoted(), promote.getPromoter(), promote.getReason(), promote.getTimestamp(), promote.getPrevRank(), promote.getNewRank()));
+				sender.sendMessage(main.formatReport(main.displayStrings[2], promote.getId(), promote.getReported(), promote.getReporter(), promote.getReason(), promote.getTimestamp(), promote.getPrevRank(), promote.getNewRank()));
 				break;
 			case DEMOTE:
 				Demotions demote = main.getDatabase().find(Demotions.class).where().eq("id", id).findUnique();
 
-				sender.sendMessage(main.formatReport(main.displayStrings[3], demote.getId(), demote.getDemoted(), demote.getDemoter(), demote.getReason(), demote.getTimestamp(), demote.getPrevRank(), demote.getNewRank()));
+				sender.sendMessage(main.formatReport(main.displayStrings[3], demote.getId(), demote.getReported(), demote.getReporter(), demote.getReason(), demote.getTimestamp(), demote.getPrevRank(), demote.getNewRank()));
 				break;
 			default:
 				sender.sendMessage(ChatColor.DARK_GRAY + "Unspecified action happened");

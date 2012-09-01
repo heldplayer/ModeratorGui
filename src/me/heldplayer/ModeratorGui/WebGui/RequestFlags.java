@@ -4,9 +4,7 @@ public class RequestFlags {
 	public Method method = Method.GET;
 
 	public enum Method {
-		NULL(false, "null"), GET(true, "get"), POST(true, "post"), HEAD(
-				false,
-				"head");
+		NULL(false, "null"), GET(true, "get"), POST(true, "post"), HEAD(false, "head");
 
 		public final boolean hasBody;
 		private final String name;

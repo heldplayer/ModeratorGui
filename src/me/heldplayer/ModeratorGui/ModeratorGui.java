@@ -31,7 +31,7 @@ public class ModeratorGui extends JavaPlugin {
 	public List<String> ranks;
 	private ThreadWebserver serverThread;
 	public static ModeratorGui instance;
-	public static final int version = 5;
+	public static final int version = 6;
 	public String[] displayStrings = new String[6];
 	public SimpleDateFormat dateFormat;
 	private FileConfiguration config = null;
@@ -96,6 +96,10 @@ public class ModeratorGui extends JavaPlugin {
 			getServer().getConsoleSender().sendMessage("[" + pdf.getPrefix() + "] " + ChatColor.LIGHT_PURPLE + "Updating config file for for ModeratorGui 1.4");
 
 			config.set("enable-webserver", defConfig.get("enable-webserver"));
+		}
+
+		if (config.getInt("config-version") < 6) {
+			throw new RuntimeException("Please export your database with ModeratorGui version 1.6, and let it uninstall the database. Then import the database with the latest version.");
 		}
 
 		config.set("config-version", version);
