@@ -1,3 +1,4 @@
+
 package me.heldplayer.ModeratorGui;
 
 import java.io.DataInputStream;
@@ -24,213 +25,217 @@ import org.bukkit.command.CommandSender;
 
 public class AdminCommand implements CommandExecutor {
 
-	private final ModeratorGui main;
+    private final ModeratorGui main;
 
-	public AdminCommand(ModeratorGui plugin) {
-		main = plugin;
-	}
+    public AdminCommand(ModeratorGui plugin) {
+        main = plugin;
+    }
 
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
-		if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
-			if (sender.hasPermission("moderatorgui.export"))
-				sender.sendMessage(ChatColor.GRAY + "/" + alias + " export");
-			if (sender.hasPermission("moderatorgui.import"))
-				sender.sendMessage(ChatColor.GRAY + "/" + alias + " import " + ChatColor.DARK_RED + "WARNING: Clears the current database and replaces it with the contents of 'data.bin'");
-			if (sender.hasPermission("moderatorgui.uninstall"))
-				sender.sendMessage(ChatColor.GRAY + "/" + alias + " uninstall " + ChatColor.DARK_RED + "WARNING: Deletes database and disables the plugin, the plugin will need to be manually removed after server shutdown");
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
+            if (sender.hasPermission("moderatorgui.export"))
+                sender.sendMessage(ChatColor.GRAY + "/" + alias + " export");
+            if (sender.hasPermission("moderatorgui.import"))
+                sender.sendMessage(ChatColor.GRAY + "/" + alias + " import " + ChatColor.DARK_RED + "WARNING: Clears the current database and replaces it with the contents of 'data.bin'");
+            if (sender.hasPermission("moderatorgui.uninstall"))
+                sender.sendMessage(ChatColor.GRAY + "/" + alias + " uninstall " + ChatColor.DARK_RED + "WARNING: Deletes database and disables the plugin, the plugin will need to be manually removed after server shutdown");
 
-			return true;
-		}
+            return true;
+        }
 
-		if (args[0].equalsIgnoreCase("export") && sender.hasPermission("moderatorgui.export")) {
-			try {
-				sender.sendMessage(ChatColor.GRAY + "Exporting database to /plugins/ModeratorGui/data.bin");
+        if (args[0].equalsIgnoreCase("export") && sender.hasPermission("moderatorgui.export")) {
+            try {
+                sender.sendMessage(ChatColor.GRAY + "Exporting database to /plugins/ModeratorGui/data.bin");
 
-				List<Lists> lists = main.getDatabase().find(Lists.class).findList();
+                List<Lists> lists = main.getDatabase().find(Lists.class).findList();
 
-				FileOutputStream FOS = new FileOutputStream(new File(main.getDataFolder(), "data.bin"));
+                FileOutputStream FOS = new FileOutputStream(new File(main.getDataFolder(), "data.bin"));
 
-				DataOutputStream DOS = new DataOutputStream(FOS);
+                DataOutputStream DOS = new DataOutputStream(FOS);
 
-				DOS.writeInt(lists.size());
+                DOS.writeInt(lists.size());
 
-				for (Lists list : lists) {
-					int id = list.getReportId();
-					ReportType type = ReportType.getType(list.getType());
+                for (Lists list : lists) {
+                    int id = list.getReportId();
+                    ReportType type = ReportType.getType(list.getType());
 
-					DOS.writeInt(list.getId());
+                    DOS.writeInt(list.getId());
 
-					DOS.writeInt(list.getReportId());
+                    DOS.writeInt(list.getReportId());
 
-					DOS.writeInt(list.getType());
+                    DOS.writeInt(list.getType());
 
-					switch (type) {
-					case ISSUE:
-						Issues issue = ModeratorGui.instance.getDatabase().find(Issues.class).where().eq("id", id).findUnique();
+                    switch (type) {
+                    case ISSUE:
+                        Issues issue = ModeratorGui.instance.getDatabase().find(Issues.class).where().eq("id", id).findUnique();
 
-						issue.toData(DOS);
+                        issue.toData(DOS);
 
-						break;
-					case BAN:
-						Bans ban = ModeratorGui.instance.getDatabase().find(Bans.class).where().eq("id", id).findUnique();
+                    break;
+                    case BAN:
+                        Bans ban = ModeratorGui.instance.getDatabase().find(Bans.class).where().eq("id", id).findUnique();
 
-						ban.toData(DOS);
+                        ban.toData(DOS);
 
-						break;
-					case UNBAN:
-						Unbans unban = ModeratorGui.instance.getDatabase().find(Unbans.class).where().eq("id", id).findUnique();
+                    break;
+                    case UNBAN:
+                        Unbans unban = ModeratorGui.instance.getDatabase().find(Unbans.class).where().eq("id", id).findUnique();
 
-						unban.toData(DOS);
+                        unban.toData(DOS);
 
-						break;
-					case PROMOTE:
-						Promotions promote = ModeratorGui.instance.getDatabase().find(Promotions.class).where().eq("id", id).findUnique();
+                    break;
+                    case PROMOTE:
+                        Promotions promote = ModeratorGui.instance.getDatabase().find(Promotions.class).where().eq("id", id).findUnique();
 
-						promote.toData(DOS);
+                        promote.toData(DOS);
 
-						break;
-					case DEMOTE:
-						Demotions demote = ModeratorGui.instance.getDatabase().find(Demotions.class).where().eq("id", id).findUnique();
+                    break;
+                    case DEMOTE:
+                        Demotions demote = ModeratorGui.instance.getDatabase().find(Demotions.class).where().eq("id", id).findUnique();
 
-						demote.toData(DOS);
+                        demote.toData(DOS);
 
-						break;
-					default:
-						break;
-					}
-				}
+                    break;
+                    default:
+                    break;
+                    }
+                }
 
-				DOS.flush();
-				DOS.close();
-				FOS.close();
+                DOS.flush();
+                DOS.close();
+                FOS.close();
 
-				sender.sendMessage(ChatColor.GREEN + "Data exported!");
+                sender.sendMessage(ChatColor.GREEN + "Data exported!");
 
-			} catch (FileNotFoundException e) {
-				sender.sendMessage(ChatColor.RED + "Failed exporting data to binary file, see the console for more information");
+            }
+            catch (FileNotFoundException e) {
+                sender.sendMessage(ChatColor.RED + "Failed exporting data to binary file, see the console for more information");
 
-				e.printStackTrace();
-			} catch (IOException e) {
-				sender.sendMessage(ChatColor.RED + "Failed exporting data to binary file, see the console for more information");
+                e.printStackTrace();
+            }
+            catch (IOException e) {
+                sender.sendMessage(ChatColor.RED + "Failed exporting data to binary file, see the console for more information");
 
-				e.printStackTrace();
-			}
+                e.printStackTrace();
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		if (args[0].equalsIgnoreCase("import") && sender.hasPermission("moderatorgui.import")) {
-			try {
-				FileInputStream FIS = new FileInputStream(new File(main.getDataFolder(), "data.bin"));
+        if (args[0].equalsIgnoreCase("import") && sender.hasPermission("moderatorgui.import")) {
+            try {
+                FileInputStream FIS = new FileInputStream(new File(main.getDataFolder(), "data.bin"));
 
-				DataInputStream DIS = new DataInputStream(FIS);
+                DataInputStream DIS = new DataInputStream(FIS);
 
-				sender.sendMessage(ChatColor.GRAY + "Deleting database...");
-				main.deleteDatabase();
-				sender.sendMessage(ChatColor.GRAY + "Setting up database...");
-				main.setupDatabase();
-				sender.sendMessage(ChatColor.GRAY + "Importing from /plugins/ModeratorGui/data.bin");
+                sender.sendMessage(ChatColor.GRAY + "Deleting database...");
+                main.deleteDatabase();
+                sender.sendMessage(ChatColor.GRAY + "Setting up database...");
+                main.setupDatabase();
+                sender.sendMessage(ChatColor.GRAY + "Importing from /plugins/ModeratorGui/data.bin");
 
-				int rowCount = DIS.readInt();
+                int rowCount = DIS.readInt();
 
-				for (int i = 0; i < rowCount; i++) {
-					int id = DIS.readInt();
-					int reportId = DIS.readInt();
-					int reportType = DIS.readInt();
-					String reporter, target;
+                for (int i = 0; i < rowCount; i++) {
+                    int id = DIS.readInt();
+                    int reportId = DIS.readInt();
+                    int reportType = DIS.readInt();
+                    String reporter, target;
 
-					ReportType type = ReportType.getType(reportType);
+                    ReportType type = ReportType.getType(reportType);
 
-					switch (type) {
-					case ISSUE:
-						Issues issue = Issues.fromData(DIS);
+                    switch (type) {
+                    case ISSUE:
+                        Issues issue = Issues.fromData(DIS);
 
-						reporter = issue.getReporter();
-						target = issue.getReported();
+                        reporter = issue.getReporter();
+                        target = issue.getReported();
 
-						main.getDatabase().insert(issue);
-						break;
-					case BAN:
-						Bans ban = Bans.fromData(DIS);
+                        main.getDatabase().insert(issue);
+                    break;
+                    case BAN:
+                        Bans ban = Bans.fromData(DIS);
 
-						reporter = ban.getReporter();
-						target = ban.getReported();
+                        reporter = ban.getReporter();
+                        target = ban.getReported();
 
-						main.getDatabase().insert(ban);
-						break;
-					case UNBAN:
-						Unbans unban = Unbans.fromData(DIS);
+                        main.getDatabase().insert(ban);
+                    break;
+                    case UNBAN:
+                        Unbans unban = Unbans.fromData(DIS);
 
-						reporter = unban.getReporter();
-						target = unban.getReported();
+                        reporter = unban.getReporter();
+                        target = unban.getReported();
 
-						main.getDatabase().insert(unban);
-						break;
-					case PROMOTE:
-						Promotions promote = Promotions.fromData(DIS);
+                        main.getDatabase().insert(unban);
+                    break;
+                    case PROMOTE:
+                        Promotions promote = Promotions.fromData(DIS);
 
-						reporter = promote.getReporter();
-						target = promote.getReported();
+                        reporter = promote.getReporter();
+                        target = promote.getReported();
 
-						main.getDatabase().insert(promote);
-						break;
-					case DEMOTE:
-						Demotions demote = Demotions.fromData(DIS);
+                        main.getDatabase().insert(promote);
+                    break;
+                    case DEMOTE:
+                        Demotions demote = Demotions.fromData(DIS);
 
-						reporter = demote.getReporter();
-						target = demote.getReported();
+                        reporter = demote.getReporter();
+                        target = demote.getReported();
 
-						main.getDatabase().insert(demote);
-						break;
-					default:
-						continue;
-					}
+                        main.getDatabase().insert(demote);
+                    break;
+                    default:
+                        continue;
+                    }
 
-					Lists list = new Lists();
+                    Lists list = new Lists();
 
-					list.setId(id);
-					list.setReportId(reportId);
-					list.setType(reportType);
-					list.setReporter(reporter);
-					list.setTarget(target);
+                    list.setId(id);
+                    list.setReportId(reportId);
+                    list.setType(reportType);
+                    list.setReporter(reporter);
+                    list.setTarget(target);
 
-					main.getDatabase().insert(list);
-				}
+                    main.getDatabase().insert(list);
+                }
 
-				DIS.close();
-				FIS.close();
+                DIS.close();
+                FIS.close();
 
-				sender.sendMessage(ChatColor.GREEN + "Data imported!");
+                sender.sendMessage(ChatColor.GREEN + "Data imported!");
 
-			} catch (FileNotFoundException e) {
-				sender.sendMessage(ChatColor.RED + "Failed importing data from binary file, see the console for more information");
+            }
+            catch (FileNotFoundException e) {
+                sender.sendMessage(ChatColor.RED + "Failed importing data from binary file, see the console for more information");
 
-				e.printStackTrace();
-			} catch (IOException e) {
-				sender.sendMessage(ChatColor.RED + "Failed importing data from binary file, see the console for more information");
+                e.printStackTrace();
+            }
+            catch (IOException e) {
+                sender.sendMessage(ChatColor.RED + "Failed importing data from binary file, see the console for more information");
 
-				e.printStackTrace();
-			}
+                e.printStackTrace();
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		if (args[0].equalsIgnoreCase("uninstall") && sender.hasPermission("moderatorgui.uninstall")) {
-			sender.sendMessage(ChatColor.RED + "Deleting database...");
-			main.getLogger().info("Deleting database by user command, command executed by " + sender.getName());
+        if (args[0].equalsIgnoreCase("uninstall") && sender.hasPermission("moderatorgui.uninstall")) {
+            sender.sendMessage(ChatColor.RED + "Deleting database...");
+            main.getLogger().info("Deleting database by user command, command executed by " + sender.getName());
 
-			main.deleteDatabase();
+            main.deleteDatabase();
 
-			sender.sendMessage(ChatColor.RED + "Disabling ModeratorGui");
-			sender.sendMessage(ChatColor.DARK_RED + "WARNING: ModeratorGui will be enabled again after server restart, replace or delete the jar before restarting the server!");
-			main.getLogger().info("Disabling self...");
+            sender.sendMessage(ChatColor.RED + "Disabling ModeratorGui");
+            sender.sendMessage(ChatColor.DARK_RED + "WARNING: ModeratorGui will be enabled again after server restart, replace or delete the jar before restarting the server!");
+            main.getLogger().info("Disabling self...");
 
-			Bukkit.getPluginManager().disablePlugin(main);
+            Bukkit.getPluginManager().disablePlugin(main);
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 }
