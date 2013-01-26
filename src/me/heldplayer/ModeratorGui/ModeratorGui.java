@@ -1,12 +1,21 @@
 
 package me.heldplayer.ModeratorGui;
 
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.persistence.PersistenceException;
 
+import me.heldplayer.ModeratorGui.WebGui.InternalServerException;
 import me.heldplayer.ModeratorGui.WebGui.ThreadWebserver;
 import me.heldplayer.ModeratorGui.tables.Bans;
 import me.heldplayer.ModeratorGui.tables.Demotions;
@@ -18,6 +27,7 @@ import me.heldplayer.ModeratorGui.tables.Unbans;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -32,10 +42,11 @@ public class ModeratorGui extends JavaPlugin {
     public List<String> ranks;
     private ThreadWebserver serverThread;
     public static ModeratorGui instance;
-    public static final int version = 6;
     public String[] displayStrings = new String[6];
     public SimpleDateFormat dateFormat;
     private FileConfiguration config = null;
+    public static Logger log;
+    private HashMap<String, String> passwords;
 
     @Override
     public void onDisable() {
@@ -47,6 +58,7 @@ public class ModeratorGui extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        log = this.getLogger();
 
         try {
             setupDatabase();
@@ -71,10 +83,12 @@ public class ModeratorGui extends JavaPlugin {
         ranks = config.getStringList("ranks");
 
         if (!config.isSet("config-version")) {
-            config.set("config-version", version);
+            config.set("config-version", 1);
         }
 
         if (config.getInt("config-version") < 2) {
+            config.set("config-version", 2);
+
             getServer().getConsoleSender().sendMessage("[" + pdf.getPrefix() + "] " + ChatColor.LIGHT_PURPLE + "Updating table `mgui_issues` for ModeratorGui 1.2");
 
             SqlUpdate update = getDatabase().createSqlUpdate("ALTER TABLE `mgui_issues` ADD `is_closed` BOOLEAN NOT NULL DEFAULT '0' AFTER `issue`");
@@ -83,28 +97,46 @@ public class ModeratorGui extends JavaPlugin {
         }
 
         if (config.getInt("config-version") < 3) {
+            config.set("config-version", 3);
+
             getServer().getConsoleSender().sendMessage("[" + pdf.getPrefix() + "] " + ChatColor.LIGHT_PURPLE + "Updating config file for for ModeratorGui 1.2");
 
             config.set("messages", defConfig.get("messages"));
         }
 
         if (config.getInt("config-version") < 4) {
+            config.set("config-version", 4);
+
             getServer().getConsoleSender().sendMessage("[" + pdf.getPrefix() + "] " + ChatColor.LIGHT_PURPLE + "Updating config file for for ModeratorGui 1.3");
 
             config.set("perform", defConfig.get("perform"));
         }
 
         if (config.getInt("config-version") < 5) {
+            config.set("config-version", 5);
+
             getServer().getConsoleSender().sendMessage("[" + pdf.getPrefix() + "] " + ChatColor.LIGHT_PURPLE + "Updating config file for for ModeratorGui 1.4");
 
             config.set("enable-webserver", defConfig.get("enable-webserver"));
         }
 
         if (config.getInt("config-version") < 6) {
-            throw new RuntimeException("Please export your database with ModeratorGui version 1.6, and let it uninstall the database. Then import the database with the latest version.");
+            config.set("config-version", 6);
+
+            RuntimeException ex = new RuntimeException("Please export your database with ModeratorGui version 1.6, and let it uninstall the database. Then import the database with the latest version.");
+
+            ex.fillInStackTrace();
+
+            ex.printStackTrace();
         }
 
-        config.set("config-version", version);
+        if (config.getInt("config-version") < 7) {
+            config.set("config-version", 7);
+
+            getServer().getConsoleSender().sendMessage("[" + pdf.getPrefix() + "] " + ChatColor.LIGHT_PURPLE + "Updating config file for for ModeratorGui 1.8");
+
+            config.set("accounts", defConfig.get("accounts"));
+        }
 
         displayStrings[0] = config.getString("messages.issue");
         displayStrings[1] = config.getString("messages.resolved-issue");
@@ -112,6 +144,41 @@ public class ModeratorGui extends JavaPlugin {
         displayStrings[3] = config.getString("messages.demotion");
         displayStrings[4] = config.getString("messages.ban");
         displayStrings[5] = config.getString("messages.unban");
+
+        this.passwords = new HashMap<String, String>();
+
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        }
+        catch (NoSuchAlgorithmException e) {
+            throw new InternalServerException(e);
+        }
+
+        ConfigurationSection section = config.getConfigurationSection("accounts");
+        Set<String> keys = section.getKeys(false);
+        Iterator<String> i = keys.iterator();
+
+        while (i.hasNext()) {
+            String username = i.next();
+
+            String password = section.getString(username, "null");
+
+            try {
+                md.update(password.getBytes("UTF-8"));
+            }
+            catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            byte[] digest = md.digest();
+            BigInteger bigInt = new BigInteger(1, digest);
+            String hashtext = bigInt.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+
+            passwords.put(username.toLowerCase(), hashtext);
+        }
 
         saveConfig();
 
@@ -251,5 +318,11 @@ public class ModeratorGui extends JavaPlugin {
         }
 
         return matched;
+    }
+
+    public static String getPasswordForUsername(String username) {
+        username = username.toLowerCase();
+
+        return instance.passwords.get(username);
     }
 }

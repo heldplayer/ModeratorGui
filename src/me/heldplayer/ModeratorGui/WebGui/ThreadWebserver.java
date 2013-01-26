@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Random;
 
 import me.heldplayer.ModeratorGui.ModeratorGui;
@@ -14,7 +14,7 @@ public class ThreadWebserver extends Thread {
     private ServerSocket serverSocket = null;
     public boolean running = false;
     public static ThreadWebserver instance;
-    private HashSet<String> sessions;
+    private HashMap<String, String> sessions;
     private Random rand;
     private final int port;
     private final String host;
@@ -23,7 +23,7 @@ public class ThreadWebserver extends Thread {
         super("ModeratorGui server thread");
 
         instance = this;
-        sessions = new HashSet<String>();
+        sessions = new HashMap<String, String>();
         rand = new Random();
         this.port = port;
         this.host = host;
@@ -44,22 +44,26 @@ public class ThreadWebserver extends Thread {
         catch (IOException e) {}
     }
 
-    public String createSession() {
+    public String createSession(String sessionOwner) {
         int response = rand.nextInt();
 
         String session = Integer.toHexString(response);
 
-        if (sessions.contains(session)) {
+        if (sessions.containsKey(session)) {
             return null;
         }
 
-        sessions.add(session);
+        sessions.put(session, sessionOwner.toLowerCase());
 
         return session;
     }
 
     public boolean sessionAllowed(String session) {
-        return sessions.contains(session);
+        return sessions.containsKey(session);
+    }
+
+    public String getSessionOwner(String session) {
+        return sessions.get(session);
     }
 
     @Override

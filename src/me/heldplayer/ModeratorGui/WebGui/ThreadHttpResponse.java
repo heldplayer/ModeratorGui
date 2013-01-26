@@ -85,7 +85,9 @@ public class ThreadHttpResponse extends Thread {
 
                 if (location.startsWith("/GENERATED/")) {
                     if (location.startsWith("/GENERATED/LOGIN/")) {
-                        new LoginResponse(location.substring(11 + 6)).writeResponse(flags).flush(out);
+                        String[] sepperated = location.substring(11 + 6).split("/");
+
+                        new LoginResponse(sepperated[0], sepperated[1]).writeResponse(flags).flush(out);
 
                         break main;
                     }
@@ -131,6 +133,20 @@ public class ThreadHttpResponse extends Thread {
                             break main;
                         }
                     }
+                    if (location.startsWith("/GENERATED/REPORT/")) {
+                        String[] sepperated = location.substring(11 + 7).split("/");
+
+                        if (ThreadWebserver.instance.sessionAllowed(sepperated[0])) {
+                            new ReportResponse(sepperated[0], sepperated[1], sepperated[2], sepperated[3], sepperated[4], sepperated[5]).writeResponse(flags).flush(out);
+
+                            break main;
+                        }
+                        else {
+                            new ErrorResponse(ErrorType.Forbidden).writeResponse(flags).flush(out);
+
+                            break main;
+                        }
+                    }
                 }
                 else {
                     while (!(location.indexOf("..") < 0)) {
@@ -159,6 +175,14 @@ public class ThreadHttpResponse extends Thread {
 
                         break main;
                     }
+                }
+            }
+            catch (WebGuiException ex) {
+                try {
+                    ex.response.writeResponse(flags).flush(out);
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
             catch (IOException e) {

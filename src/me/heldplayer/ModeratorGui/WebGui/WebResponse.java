@@ -5,6 +5,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.net.SocketException;
+import java.util.logging.Level;
+
+import me.heldplayer.ModeratorGui.ModeratorGui;
 
 public abstract class WebResponse {
     protected PipedInputStream pip;
@@ -26,8 +30,11 @@ public abstract class WebResponse {
                 stream.write(bits);
             }
         }
+        catch (SocketException ex) {
+            ModeratorGui.log.log(Level.WARNING, "Tried displaying page to a client, but the client closed the connection!", ex);
+        }
         catch (IOException ex) {
-            throw ex;
+            ModeratorGui.log.log(Level.WARNING, "Tried displaying page to a client, but an error occoured", ex);
         }
         finally {
             try {
