@@ -303,6 +303,11 @@ public class ModeratorGui extends JavaPlugin {
 
         List<String> matched = new ArrayList<String>();
 
+        if (rank == null || rank.isEmpty()) {
+            matched.addAll(ranks);
+            return matched;
+        }
+
         for (String matchedRank : ranks) {
             if (matchedRank.equalsIgnoreCase(rank)) {
                 matched.clear();

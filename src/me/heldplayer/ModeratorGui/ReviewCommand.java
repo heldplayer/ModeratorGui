@@ -1,6 +1,7 @@
 
 package me.heldplayer.ModeratorGui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.heldplayer.ModeratorGui.tables.Bans;
@@ -14,8 +15,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
-public class ReviewCommand implements CommandExecutor {
+public class ReviewCommand implements CommandExecutor, TabCompleter {
 
     private final ModeratorGui main;
 
@@ -354,4 +356,37 @@ public class ReviewCommand implements CommandExecutor {
 
         return false;
     }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        ArrayList<String> possibles = new ArrayList<String>();
+
+        if (!sender.hasPermission("moderatorgui.review")) {
+            return possibles;
+        }
+
+        if (args.length == 1) {
+            possibles.add("by");
+            possibles.add("close");
+            possibles.add("target");
+        }
+
+        if (args.length == 2 && (args[0].equalsIgnoreCase("by") || args[0].equalsIgnoreCase("target"))) {
+            return null;
+        }
+        else if (args[0].equalsIgnoreCase("close")) {
+            possibles.add("I:");
+        }
+
+        ArrayList<String> result = new ArrayList<String>();
+
+        for (String possible : possibles) {
+            if (possible.toLowerCase().startsWith(args[args.length - 1].toLowerCase())) {
+                result.add(possible);
+            }
+        }
+
+        return result;
+    }
+
 }

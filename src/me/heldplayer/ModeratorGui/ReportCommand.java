@@ -1,6 +1,7 @@
 
 package me.heldplayer.ModeratorGui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.heldplayer.ModeratorGui.tables.Bans;
@@ -14,8 +15,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
-public class ReportCommand implements CommandExecutor {
+public class ReportCommand implements CommandExecutor, TabCompleter {
 
     private final ModeratorGui main;
 
@@ -459,6 +461,65 @@ public class ReportCommand implements CommandExecutor {
         return false;
     }
 
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        ArrayList<String> possibles = new ArrayList<String>();
+
+        if (sender.hasPermission("moderatorgui.ban")) {
+            if (args.length == 1) {
+                possibles.add("ban");
+            }
+        }
+
+        if (args.length == 2) {
+            return null;
+        }
+
+        if (sender.hasPermission("moderatorgui.demote")) {
+            if (args.length == 1) {
+                possibles.add("demote");
+            }
+            if (args[0].equalsIgnoreCase("demote") && (args.length == 3 || args.length == 4)) {
+                possibles.addAll(ModeratorGui.getRankMatches(null));
+            }
+        }
+
+        if (args.length == 1) {
+            possibles.add("help");
+        }
+
+        if (sender.hasPermission("moderatorgui.issue")) {
+            if (args.length == 1) {
+                possibles.add("issue");
+            }
+        }
+
+        if (sender.hasPermission("moderatorgui.promote")) {
+            if (args.length == 1) {
+                possibles.add("promote");
+            }
+            if (args[0].equalsIgnoreCase("promote") && (args.length == 3 || args.length == 4)) {
+                possibles.addAll(ModeratorGui.getRankMatches(null));
+            }
+        }
+
+        if (sender.hasPermission("moderatorgui.unban")) {
+            if (args.length == 1) {
+                possibles.add("unban");
+            }
+        }
+
+        ArrayList<String> result = new ArrayList<String>();
+
+        for (String possible : possibles) {
+            if (possible.toLowerCase().startsWith(args[args.length - 1].toLowerCase())) {
+                result.add(possible);
+            }
+        }
+
+        return result;
+    }
+
     private void report(int id, ReportType type, String reporter, String target) {
         Lists listRow = new Lists();
 
@@ -469,4 +530,5 @@ public class ReportCommand implements CommandExecutor {
 
         main.getDatabase().save(listRow);
     }
+
 }

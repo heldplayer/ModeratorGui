@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import me.heldplayer.ModeratorGui.tables.Bans;
@@ -22,8 +23,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 
-public class AdminCommand implements CommandExecutor {
+public class AdminCommand implements CommandExecutor, TabCompleter {
 
     private final ModeratorGui main;
 
@@ -238,4 +240,28 @@ public class AdminCommand implements CommandExecutor {
 
         return false;
     }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        ArrayList<String> result = new ArrayList<String>();
+
+        if (args.length == 1) {
+            if (sender.hasPermission("moderatorgui.export")) {
+                result.add("export");
+            }
+
+            result.add("help");
+
+            if (sender.hasPermission("moderatorgui.import")) {
+                result.add("import");
+            }
+
+            if (sender.hasPermission("moderatorgui.uninstall")) {
+                result.add("uninstall");
+            }
+        }
+
+        return result;
+    }
+
 }
