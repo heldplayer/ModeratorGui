@@ -1,6 +1,12 @@
 var session = "";
 
 function init() {
+    if (window.location.protocol != "http:") {
+        document.getElementById("dialog").innerText = "Page is being accessed incorrectly!";
+        alert("Page is being accessed incorrectly! Redirecting...");
+        window.location.href = "http://127.0.0.1:8273/";
+        return;
+    }
     var username = prompt("Please enter username to log in to", "");
     var pass = Sha256.hash(prompt("Please enter the password to use the web client", ""), false);
 
