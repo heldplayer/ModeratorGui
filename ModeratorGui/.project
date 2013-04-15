@@ -23,7 +23,7 @@
 		<link>
 			<name>src</name>
 			<type>2</type>
-			<locationURI>GIT_LOC/ModeratorGui/src</locationURI>
+			<location>D:/Home/git/ModeratorGui/src</location>
 		</link>
 		<link>
 			<name>web</name>
