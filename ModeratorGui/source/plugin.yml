@@ -1,0 +1,68 @@
+name: ModeratorGui
+main: me.heldplayer.ModeratorGui.ModeratorGui
+version: 1.9
+author: heldplayer
+description: Plugin for server moderation
+database: true
+prefix: ModGui
+commands:
+  report:
+    description: Main command for reporting moderation stuff
+    permission: moderatorgui.command
+    usage: /<command> help
+  review:
+    description: Main command for reviewing moderation stuff
+    permission: moderatorgui.command
+    usage: /<command> help
+  moderatorgui:
+    description: Plugin administration command
+    permission: moderatorgui.command
+    usage: /<command> help
+    aliases: [ modgui, mg ]
+permissions:
+  moderatorgui:
+    default: op
+    description: Command for full rights
+    children:
+      moderatorgui.command: true
+      moderatorgui.command.admin: true
+      moderatorgui.issue: true
+      moderatorgui.ban: true
+      moderatorgui.unban: true
+      moderatorgui.promote: true
+      moderatorgui.demote: true
+      moderatorgui.review: true
+      moderatorgui.viewreported: true
+      moderatorgui.viewopenissues: true
+      moderatorgui.export: true
+      moderatorgui.import: true
+      moderatorgui.uninstall: true
+      moderatorgui.setpass: true
+  moderatorgui.command:
+    description: Allows using the plugin commands
+  moderatorgui.command.admin:
+    description: Allows using the admin commands
+  moderatorgui.issue:
+    description: Allows reporting issues with players
+  moderatorgui.ban:
+    description: Allows reporting banning a player
+  moderatorgui.unban:
+    description: Allows reporting unbanning a player
+  moderatorgui.promote:
+    description: Allows reporting promotions
+  moderatorgui.demote:
+    description: Allows reporting demotions
+  moderatorgui.review:
+    description: Allows reviewing reports
+  moderatorgui.viewreported:
+    description: "Allows seeing an issue when it's reported"
+  moderatorgui.viewopenissues:
+    description: Allows seeing wether a person has open issues
+  moderatorgui.export:
+    description: Allows exporting all reports to a binary file
+  moderatorgui.import:
+    description: Allows importing all reports from a binary file
+  moderatorgui.uninstall:
+    description: Allows deleting the database
+  moderatorgui.setpass:
+    description: Allows setting a password to be used on the webgui
