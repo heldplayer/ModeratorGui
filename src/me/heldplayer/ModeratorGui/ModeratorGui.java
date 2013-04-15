@@ -44,9 +44,10 @@ public class ModeratorGui extends JavaPlugin {
     public static ModeratorGui instance;
     public String[] displayStrings = new String[6];
     public SimpleDateFormat dateFormat;
-    private FileConfiguration config = null;
+    protected FileConfiguration config = null;
     public static Logger log;
-    private HashMap<String, String> passwords;
+    protected HashMap<String, String> passwords;
+    public static MessageDigest md;
 
     @Override
     public void onDisable() {
@@ -147,12 +148,13 @@ public class ModeratorGui extends JavaPlugin {
 
         this.passwords = new HashMap<String, String>();
 
-        MessageDigest md;
         try {
             md = MessageDigest.getInstance("SHA-256");
         }
         catch (NoSuchAlgorithmException e) {
-            throw new InternalServerException(e);
+            this.setEnabled(false);
+
+            throw new InternalServerException("Can't find SHA-256 encryption, can't launch!", e);
         }
 
         ConfigurationSection section = config.getConfigurationSection("accounts");
@@ -177,7 +179,8 @@ public class ModeratorGui extends JavaPlugin {
                 hashtext = "0" + hashtext;
             }
 
-            passwords.put(username.toLowerCase(), hashtext);
+            passwords.put(username.toLowerCase(), password);
+            //passwords.put(username.toLowerCase(), password);
         }
 
         saveConfig();

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>ModeratorGui</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>bukkit.jar</name>
+			<type>1</type>
+			<locationURI>BUKKIT_JAR</locationURI>
+		</link>
+		<link>
+			<name>src</name>
+			<type>2</type>
+			<locationURI>GIT_LOC/ModeratorGui/src</locationURI>
+		</link>
+		<link>
+			<name>web</name>
+			<type>2</type>
+			<locationURI>GIT_LOC/ModeratorGui/web</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>

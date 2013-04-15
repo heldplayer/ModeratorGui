@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 
 public class AdminCommand implements CommandExecutor, TabCompleter {
 
@@ -42,6 +45,8 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(ChatColor.GRAY + "/" + alias + " import " + ChatColor.DARK_RED + "WARNING: Clears the current database and replaces it with the contents of 'data.bin'");
             if (sender.hasPermission("moderatorgui.uninstall"))
                 sender.sendMessage(ChatColor.GRAY + "/" + alias + " uninstall " + ChatColor.DARK_RED + "WARNING: Deletes database and disables the plugin, the plugin will need to be manually removed after server shutdown");
+            if (sender.hasPermission("moderatorgui.setpass") && sender instanceof Player)
+                sender.sendMessage(ChatColor.GRAY + "/" + alias + " setpass <password> " + ChatColor.DARK_RED + "WARNING: Password will be visible in console, do not use a password you use anywhere else!");
 
             return true;
         }
@@ -238,6 +243,39 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        if (args[0].equalsIgnoreCase("setpass") && sender.hasPermission("moderatorgui.setpass") && args.length >= 2 && sender instanceof Player) {
+            String password = args[1];
+
+            for (int i = 2; i < args.length; i++) {
+                password += " " + args[i];
+            }
+
+            try {
+                ModeratorGui.md.update(password.getBytes("UTF-8"));
+            }
+            catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            byte[] digest = ModeratorGui.md.digest();
+            BigInteger bigInt = new BigInteger(1, digest);
+            String hashtext = bigInt.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+
+            if (ModeratorGui.instance.passwords.containsKey(sender.getName().toLowerCase())) {
+                ModeratorGui.instance.passwords.remove(sender.getName().toLowerCase());
+            }
+
+            ModeratorGui.instance.passwords.put(sender.getName().toLowerCase(), hashtext);
+
+            ModeratorGui.instance.config.set("accounts." + sender.getName(), hashtext);
+
+            ModeratorGui.instance.saveConfig();
+
+            return true;
+        }
+
         return false;
     }
 
@@ -256,9 +294,14 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 result.add("import");
             }
 
+            if (sender.hasPermission("moderatorgui.setpass")) {
+                result.add("setpass");
+            }
+
             if (sender.hasPermission("moderatorgui.uninstall")) {
                 result.add("uninstall");
             }
+
         }
 
         return result;
