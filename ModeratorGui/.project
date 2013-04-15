@@ -20,15 +20,5 @@
 			<type>1</type>
 			<locationURI>BUKKIT_JAR</locationURI>
 		</link>
-		<link>
-			<name>src</name>
-			<type>2</type>
-			<location>D:/Home/git/ModeratorGui/src</location>
-		</link>
-		<link>
-			<name>web</name>
-			<type>2</type>
-			<locationURI>GIT_LOC/ModeratorGui/web</locationURI>
-		</link>
 	</linkedResources>
 </projectDescription>
