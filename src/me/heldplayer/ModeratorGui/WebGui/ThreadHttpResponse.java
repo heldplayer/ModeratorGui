@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.URLDecoder;
 import java.util.TreeMap;
+import java.util.logging.Level;
 
 import me.heldplayer.ModeratorGui.ModeratorGui;
 import me.heldplayer.ModeratorGui.WebGui.ErrorResponse.ErrorType;
@@ -30,6 +31,7 @@ public class ThreadHttpResponse extends Thread {
     @Override
     public void run() {
         RequestFlags flags = new RequestFlags();
+        String location = null;
 
         main:
         {
@@ -67,7 +69,7 @@ public class ThreadHttpResponse extends Thread {
 
                 String[] split = input.get(0).split(" ");
                 String method = split[0];
-                String location = split[1];
+                location = split[1];
                 String version = split[2];
 
                 flags.method = RequestFlags.Method.fromString(method);
@@ -185,7 +187,8 @@ public class ThreadHttpResponse extends Thread {
                     ex.response.writeResponse(flags).flush(out);
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    ModeratorGui.log.log(Level.SEVERE, "Exception while responding to web client", ex);
+                    ModeratorGui.log.log(Level.SEVERE, "Request: " + location);
                 }
             }
             catch (IOException e) {
@@ -193,7 +196,8 @@ public class ThreadHttpResponse extends Thread {
             }
             catch (RuntimeException ex) {
                 if (!ex.getMessage().equalsIgnoreCase("break")) {
-                    ex.printStackTrace();
+                    ModeratorGui.log.log(Level.SEVERE, "Exception while responding to web client", ex);
+                    ModeratorGui.log.log(Level.SEVERE, "Request: " + location);
                 }
 
                 try {
