@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.net.URLDecoder;
 import java.util.TreeMap;
 
 import me.heldplayer.ModeratorGui.ModeratorGui;
@@ -82,6 +83,8 @@ public class ThreadHttpResponse extends Thread {
 
                     break main;
                 }
+
+                location = URLDecoder.decode(location, "UTF-8");
 
                 if (location.startsWith("/GENERATED/")) {
                     if (location.startsWith("/GENERATED/LOGIN/")) {
