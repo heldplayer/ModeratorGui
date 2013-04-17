@@ -216,6 +216,12 @@ function displayList() {
 }
 
 function findReporter() {
+    var username = document.getElementById("username").value;
+
+    if (username == "") {
+        return;
+    }
+
     document.getElementById("dialog").innerText = "Loading data, please wait...";
     document.getElementById("waiting").setAttribute("class", "visible");
 
@@ -226,9 +232,8 @@ function findReporter() {
     } else {
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     }
-    xmlhttp
-            .open("GET", "/GENERATED/REPORTER/" + session + "/" + getRequestFlags() + "/" + document
-                    .getElementById("username").value, false);
+
+    xmlhttp.open("GET", "/GENERATED/REPORTER/" + session + "/" + getRequestFlags() + "/" + username, false);
     xmlhttp.send();
 
     if (xmlhttp.status != 200) {
@@ -253,6 +258,13 @@ function findReporter() {
 }
 
 function findReported() {
+
+    var username = document.getElementById("username").value;
+
+    if (username == "") {
+        return;
+    }
+
     document.getElementById("dialog").innerText = "Loading data, please wait...";
     document.getElementById("waiting").setAttribute("class", "visible");
 
@@ -264,9 +276,7 @@ function findReported() {
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
     }
 
-    xmlhttp
-            .open("GET", "/GENERATED/REPORTED/" + session + "/" + getRequestFlags() + "/" + document
-                    .getElementById("username").value, false);
+    xmlhttp.open("GET", "/GENERATED/REPORTED/" + session + "/" + getRequestFlags() + "/" + username, false);
     xmlhttp.send();
 
     if (xmlhttp.status != 200) {
@@ -298,8 +308,7 @@ function outputData(data) {
 
         var element = document.createElement("tr");
 
-        element
-                .setAttribute("class", "report " + row["type"] + (i % 2 == 0 ? "" : " second"));
+        element.setAttribute("class", "report " + row["type"] + (i % 2 == 0 ? "" : " second"));
 
         element.innerHTML = "<td class=\"type\">" + row["type"] + "</td>";
         element.innerHTML += "<td class=\"reporter\">" + row["reporter"] + "</td>";
@@ -308,8 +317,7 @@ function outputData(data) {
         element.innerHTML += "<td class=\"time\">" + row["time"] + "</td>";
 
         if (row["type"] == "issue" && row["closed"] == true) {
-            element
-                    .setAttribute("class", "report " + row["type"] + (i % 2 == 0 ? "" : " second") + " closed");
+            element.setAttribute("class", "report " + row["type"] + (i % 2 == 0 ? "" : " second") + " closed");
         }
 
         if (row["type"] == "promote") {
