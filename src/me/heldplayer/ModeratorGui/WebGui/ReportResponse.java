@@ -3,6 +3,9 @@ package me.heldplayer.ModeratorGui.WebGui;
 
 import java.io.IOException;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+
 import me.heldplayer.ModeratorGui.ModeratorGui;
 import me.heldplayer.ModeratorGui.ReportType;
 import me.heldplayer.ModeratorGui.WebGui.ErrorResponse.ErrorType;
@@ -21,6 +24,7 @@ public class ReportResponse extends WebResponse {
     private String reason;
     private String previousRank;
     private String newRank;
+    private final ModeratorGui main;
 
     public ReportResponse(String session, String type, String reported, String reason, String previousRank, String newRank) throws IOException {
         super();
@@ -31,6 +35,7 @@ public class ReportResponse extends WebResponse {
         this.reason = reason;
         this.previousRank = previousRank;
         this.newRank = newRank;
+        this.main = ModeratorGui.instance;
 
         if ("ipdbu".indexOf(this.type) < 0) {
             throw new WebGuiException(new ErrorResponse(ErrorType.NotAcceptable));
@@ -52,11 +57,17 @@ public class ReportResponse extends WebResponse {
             row.setReporter(ThreadWebserver.instance.getSessionOwner(this.session));
             row.setTimestamp(System.currentTimeMillis());
 
-            ModeratorGui.instance.getDatabase().save(row);
+            main.getDatabase().save(row);
 
-            Issues created = ModeratorGui.instance.getDatabase().find(Issues.class).where().eq("timestamp", row.getTimestamp()).findUnique();
+            Issues created = main.getDatabase().find(Issues.class).where().eq("timestamp", row.getTimestamp()).findUnique();
 
             report(created.getId(), ReportType.ISSUE, created.getReporter(), created.getReported());
+            main.performCommands("issue", Bukkit.getConsoleSender(), row.getId(), row.getReported(), row.getReporter(), row.getIssue(), row.getTimestamp(), null, null);
+
+            String reportString = main.formatReport(main.displayStrings[0], row.getId(), row.getReported(), row.getReporter(), row.getIssue(), row.getTimestamp(), null, null);
+
+            main.getServer().broadcast(ChatColor.GRAY + row.getReporter() + " (Web) reported a new issue.", "moderatorgui.viewreported");
+            main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
             dop.writeBytes("true");
 
@@ -71,11 +82,17 @@ public class ReportResponse extends WebResponse {
             row.setPrevRank(previousRank);
             row.setNewRank(newRank);
 
-            ModeratorGui.instance.getDatabase().save(row);
+            main.getDatabase().save(row);
 
-            Promotions created = ModeratorGui.instance.getDatabase().find(Promotions.class).where().eq("timestamp", row.getTimestamp()).findUnique();
+            Promotions created = main.getDatabase().find(Promotions.class).where().eq("timestamp", row.getTimestamp()).findUnique();
 
             report(created.getId(), ReportType.PROMOTE, created.getReporter(), created.getReported());
+            main.performCommands("promote", Bukkit.getConsoleSender(), row.getId(), row.getReported(), row.getReporter(), row.getReason(), row.getTimestamp(), row.getPrevRank(), row.getNewRank());
+
+            String reportString = main.formatReport(main.displayStrings[2], row.getId(), row.getReported(), row.getReporter(), row.getReason(), row.getTimestamp(), row.getPrevRank(), row.getNewRank());
+
+            main.getServer().broadcast(ChatColor.GRAY + created.getReporter() + " reported a new promotion.", "moderatorgui.viewreported");
+            main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
             dop.writeBytes("true");
 
@@ -90,11 +107,17 @@ public class ReportResponse extends WebResponse {
             row.setPrevRank(previousRank);
             row.setNewRank(newRank);
 
-            ModeratorGui.instance.getDatabase().save(row);
+            main.getDatabase().save(row);
 
-            Demotions created = ModeratorGui.instance.getDatabase().find(Demotions.class).where().eq("timestamp", row.getTimestamp()).findUnique();
+            Demotions created = main.getDatabase().find(Demotions.class).where().eq("timestamp", row.getTimestamp()).findUnique();
 
             report(created.getId(), ReportType.DEMOTE, created.getReporter(), created.getReported());
+            main.performCommands("demote", Bukkit.getConsoleSender(), row.getId(), row.getReported(), row.getReporter(), row.getReason(), row.getTimestamp(), row.getPrevRank(), row.getNewRank());
+
+            String reportString = main.formatReport(main.displayStrings[3], row.getId(), row.getReported(), row.getReporter(), row.getReason(), row.getTimestamp(), row.getPrevRank(), row.getNewRank());
+
+            main.getServer().broadcast(ChatColor.GRAY + created.getReporter() + " reported a new demotion.", "moderatorgui.viewreported");
+            main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
             dop.writeBytes("true");
 
@@ -107,11 +130,17 @@ public class ReportResponse extends WebResponse {
             row.setReporter(ThreadWebserver.instance.getSessionOwner(this.session));
             row.setTimestamp(System.currentTimeMillis());
 
-            ModeratorGui.instance.getDatabase().save(row);
+            main.getDatabase().save(row);
 
-            Bans created = ModeratorGui.instance.getDatabase().find(Bans.class).where().eq("timestamp", row.getTimestamp()).findUnique();
+            Bans created = main.getDatabase().find(Bans.class).where().eq("timestamp", row.getTimestamp()).findUnique();
 
             report(created.getId(), ReportType.BAN, created.getReporter(), created.getReported());
+            main.performCommands("ban", Bukkit.getConsoleSender(), row.getId(), row.getReported(), row.getReporter(), row.getReason(), row.getTimestamp(), null, null);
+
+            String reportString = main.formatReport(main.displayStrings[4], row.getId(), row.getReported(), row.getReporter(), row.getReason(), row.getTimestamp(), null, null);
+
+            main.getServer().broadcast(ChatColor.GRAY + created.getReporter() + " (Web) reported a new ban.", "moderatorgui.viewreported");
+            main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
             dop.writeBytes("true");
 
@@ -124,11 +153,17 @@ public class ReportResponse extends WebResponse {
             row.setReporter(ThreadWebserver.instance.getSessionOwner(this.session));
             row.setTimestamp(System.currentTimeMillis());
 
-            ModeratorGui.instance.getDatabase().save(row);
+            main.getDatabase().save(row);
 
-            Unbans created = ModeratorGui.instance.getDatabase().find(Unbans.class).where().eq("timestamp", row.getTimestamp()).findUnique();
+            Unbans created = main.getDatabase().find(Unbans.class).where().eq("timestamp", row.getTimestamp()).findUnique();
 
             report(created.getId(), ReportType.UNBAN, created.getReporter(), created.getReported());
+            main.performCommands("unban", Bukkit.getConsoleSender(), row.getId(), row.getReported(), row.getReporter(), row.getReason(), row.getTimestamp(), null, null);
+
+            String reportString = main.formatReport(main.displayStrings[5], row.getId(), row.getReported(), row.getReporter(), row.getReason(), row.getTimestamp(), null, null);
+
+            main.getServer().broadcast(ChatColor.GRAY + created.getReporter() + " (Web) reported a new unban.", "moderatorgui.viewreported");
+            main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
             dop.writeBytes("true");
 
@@ -146,6 +181,6 @@ public class ReportResponse extends WebResponse {
         listRow.setReporter(reporter);
         listRow.setTarget(target);
 
-        ModeratorGui.instance.getDatabase().save(listRow);
+        main.getDatabase().save(listRow);
     }
 }
