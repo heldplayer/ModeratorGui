@@ -433,12 +433,12 @@ public class ReportCommand implements CommandExecutor, TabCompleter {
             report(created.getId(), ReportType.DEMOTE, sender.getName(), name);
             main.performCommands("demote", sender, row.getId(), row.getReported(), row.getReporter(), row.getReason(), row.getTimestamp(), row.getPrevRank(), row.getNewRank());
 
-            sender.sendMessage(ChatColor.GREEN + "Reported!");
-
             String reportString = main.formatReport(main.displayStrings[3], row.getId(), row.getReported(), row.getReporter(), row.getReason(), row.getTimestamp(), row.getPrevRank(), row.getNewRank());
 
             main.getServer().broadcast(ChatColor.GRAY + sender.getName() + " reported a new demotion.", "moderatorgui.viewreported");
             main.getServer().broadcast(reportString, "moderatorgui.viewreported");
+
+            sender.sendMessage(ChatColor.GREEN + "Reported!");
 
             return true;
         }
