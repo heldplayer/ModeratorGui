@@ -24,6 +24,4 @@ perform:
   unban:
     - P:/unban %target%
 accounts:
-  admin: lolpassword
-  moderator: icanhazpassword
-  overlord: gimmecookies
+  herobrine: hashedpassword
