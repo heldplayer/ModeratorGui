@@ -45,7 +45,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(ChatColor.GRAY + "/" + alias + " import " + ChatColor.DARK_RED + "WARNING: Clears the current database and replaces it with the contents of 'data.bin'");
             if (sender.hasPermission("moderatorgui.uninstall"))
                 sender.sendMessage(ChatColor.GRAY + "/" + alias + " uninstall " + ChatColor.DARK_RED + "WARNING: Deletes database and disables the plugin, the plugin will need to be manually removed after server shutdown");
-            if (sender.hasPermission("moderatorgui.setpass") && sender instanceof Player && Bukkit.getOnlineMode())
+            if (sender.hasPermission("moderatorgui.setpass") && sender instanceof Player)
                 sender.sendMessage(ChatColor.GRAY + "/" + alias + " setpass <password> " + ChatColor.DARK_RED + "WARNING: Password will be visible in console, do not use a password you use anywhere else!");
 
             return true;
@@ -239,10 +239,6 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args[0].equalsIgnoreCase("setpass") && sender.hasPermission("moderatorgui.setpass") && args.length >= 2 && sender instanceof Player) {
-            if (!Bukkit.getOnlineMode()) {
-                sender.sendMessage(ChatColor.RED + "The server is running in offline mode! Passwords can only be set when the server is in online mode to protect the server from malicious users");
-            }
-
             String password = args[1];
 
             for (int i = 2; i < args.length; i++) {
@@ -296,7 +292,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 result.add("import");
             }
 
-            if (sender.hasPermission("moderatorgui.setpass") && sender instanceof Player && Bukkit.getOnlineMode()) {
+            if (sender.hasPermission("moderatorgui.setpass") && sender instanceof Player) {
                 result.add("setpass");
             }
 
