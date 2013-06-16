@@ -44,11 +44,11 @@ public class ReportResponse extends WebResponse {
 
     @Override
     public WebResponse writeResponse(RequestFlags flags) throws IOException {
-        dop.writeBytes("HTTP/1.0 200 Ok\r\n");
-        dop.writeBytes("Connection: close\r\n");
-        dop.writeBytes("Server: ModeratorGui\r\n");
-        dop.writeBytes("Content-Type: text/plain\r\n");
-        dop.writeBytes("\r\n");
+        out.writeBytes("HTTP/1.0 200 Ok\r\n");
+        out.writeBytes("Connection: close\r\n");
+        out.writeBytes("Server: ModeratorGui\r\n");
+        out.writeBytes("Content-Type: text/plain\r\n");
+        out.writeBytes("\r\n");
 
         if (this.type.equals("i")) {
             Issues row = new Issues();
@@ -69,7 +69,7 @@ public class ReportResponse extends WebResponse {
             main.getServer().broadcast(ChatColor.GRAY + row.getReporter() + " (Web) reported a new issue.", "moderatorgui.viewreported");
             main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
-            dop.writeBytes("true");
+            out.writeBytes("true");
 
             return this;
         }
@@ -94,7 +94,7 @@ public class ReportResponse extends WebResponse {
             main.getServer().broadcast(ChatColor.GRAY + created.getReporter() + " reported a new promotion.", "moderatorgui.viewreported");
             main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
-            dop.writeBytes("true");
+            out.writeBytes("true");
 
             return this;
         }
@@ -119,7 +119,7 @@ public class ReportResponse extends WebResponse {
             main.getServer().broadcast(ChatColor.GRAY + created.getReporter() + " reported a new demotion.", "moderatorgui.viewreported");
             main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
-            dop.writeBytes("true");
+            out.writeBytes("true");
 
             return this;
         }
@@ -142,7 +142,7 @@ public class ReportResponse extends WebResponse {
             main.getServer().broadcast(ChatColor.GRAY + created.getReporter() + " (Web) reported a new ban.", "moderatorgui.viewreported");
             main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
-            dop.writeBytes("true");
+            out.writeBytes("true");
 
             return this;
         }
@@ -165,7 +165,7 @@ public class ReportResponse extends WebResponse {
             main.getServer().broadcast(ChatColor.GRAY + created.getReporter() + " (Web) reported a new unban.", "moderatorgui.viewreported");
             main.getServer().broadcast(reportString, "moderatorgui.viewreported");
 
-            dop.writeBytes("true");
+            out.writeBytes("true");
 
             return this;
         }

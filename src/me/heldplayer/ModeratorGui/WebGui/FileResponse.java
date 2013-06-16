@@ -17,11 +17,11 @@ public class FileResponse extends WebResponse {
     public WebResponse writeResponse(RequestFlags flags) throws IOException {
         Extension extension = Extension.fromFileName(file.getName());
 
-        dop.writeBytes("HTTP/1.0 200 OK\r\n");
-        dop.writeBytes("Connection: close\r\n");
-        dop.writeBytes("Server: ModeratorGui\r\n");
-        dop.writeBytes("Content-Type: " + extension.type + "\r\n");
-        dop.writeBytes("\r\n");
+        out.writeBytes("HTTP/1.0 200 OK\r\n");
+        out.writeBytes("Connection: close\r\n");
+        out.writeBytes("Server: ModeratorGui\r\n");
+        out.writeBytes("Content-Type: " + extension.type + "\r\n");
+        out.writeBytes("\r\n");
 
         FileInputStream input = new FileInputStream(file);
 
@@ -31,7 +31,7 @@ public class FileResponse extends WebResponse {
                 if (b == -1) {
                     break;
                 }
-                dop.write(b);
+                out.write(b);
             }
         }
 

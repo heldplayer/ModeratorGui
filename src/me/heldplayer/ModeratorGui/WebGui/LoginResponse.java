@@ -17,25 +17,25 @@ public class LoginResponse extends WebResponse {
 
     @Override
     public WebResponse writeResponse(RequestFlags flags) throws IOException {
-        dop.writeBytes("HTTP/1.0 200 Ok\r\n");
-        dop.writeBytes("Connection: close\r\n");
-        dop.writeBytes("Server: ModeratorGui\r\n");
-        dop.writeBytes("Content-Type: text/plain\r\n");
-        dop.writeBytes("\r\n");
+        out.writeBytes("HTTP/1.0 200 Ok\r\n");
+        out.writeBytes("Connection: close\r\n");
+        out.writeBytes("Server: ModeratorGui\r\n");
+        out.writeBytes("Content-Type: text/plain\r\n");
+        out.writeBytes("\r\n");
 
         String password = ModeratorGui.getPasswordForUsername(username);
 
         if (password != null && password.equals(this.password)) {
             String session = ThreadWebserver.instance.createSession(username);
 
-            dop.writeBytes(session);
+            out.writeBytes(session);
             
             for(int i = 0; i < ModeratorGui.instance.ranks.size(); i++){
-                dop.writeBytes("/" + ModeratorGui.instance.ranks.get(i));
+                out.writeBytes("/" + ModeratorGui.instance.ranks.get(i));
             }
         }
         else {
-            dop.writeBytes("invalid");
+            out.writeBytes("invalid");
         }
 
         return this;

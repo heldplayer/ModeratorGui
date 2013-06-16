@@ -1,32 +1,32 @@
 
 package me.heldplayer.ModeratorGui.WebGui;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.net.SocketException;
 import java.util.logging.Level;
 
 import me.heldplayer.ModeratorGui.ModeratorGui;
 
 public abstract class WebResponse {
-    protected PipedInputStream pip;
-    protected PipedOutputStream pop;
-    protected DataOutputStream dop;
+    private ByteArrayOutputStream baos;
+    protected DataOutputStream out;
 
     public WebResponse() throws IOException {
-        pop = new PipedOutputStream();
-        pip = new PipedInputStream(pop, 16384);
-        dop = new DataOutputStream(pop);
+        baos = new ByteArrayOutputStream();
+        out = new DataOutputStream(baos);
     }
 
     public abstract WebResponse writeResponse(RequestFlags flags) throws IOException;
 
     public void flush(DataOutputStream stream) throws IOException {
+        ByteArrayInputStream in = null;
         try {
-            while (pip.available() > 0) {
-                int bits = pip.read();
+            in = new ByteArrayInputStream(baos.toByteArray());
+            while (in.available() > 0) {
+                int bits = in.read();
                 stream.write(bits);
             }
         }
@@ -38,9 +38,15 @@ public abstract class WebResponse {
         }
         finally {
             try {
-                dop.close();
-                pop.close();
-                pip.close();
+                out.close();
+            }
+            catch (IOException ex) {}
+            try {
+                baos.close();
+            }
+            catch (IOException ex) {}
+            try {
+                in.close();
             }
             catch (IOException ex) {}
         }

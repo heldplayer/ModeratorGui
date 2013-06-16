@@ -44,11 +44,11 @@ public class ReporterResponse extends WebResponse {
 
     @Override
     public WebResponse writeResponse(RequestFlags flags) throws IOException {
-        dop.writeBytes("HTTP/1.0 200 Ok\r\n");
-        dop.writeBytes("Connection: close\r\n");
-        dop.writeBytes("Server: ModeratorGui\r\n");
-        dop.writeBytes("Content-Type: text/plain\r\n");
-        dop.writeBytes("\r\n");
+        out.writeBytes("HTTP/1.0 200 Ok\r\n");
+        out.writeBytes("Connection: close\r\n");
+        out.writeBytes("Server: ModeratorGui\r\n");
+        out.writeBytes("Content-Type: text/plain\r\n");
+        out.writeBytes("\r\n");
 
         Integer i = 0;
 
@@ -201,7 +201,7 @@ public class ReporterResponse extends WebResponse {
         }
         result += " ]";
 
-        dop.writeBytes(result);
+        out.writeBytes(result);
 
         return this;
     }
