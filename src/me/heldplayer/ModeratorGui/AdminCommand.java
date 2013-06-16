@@ -240,7 +240,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
 
         if (args[0].equalsIgnoreCase("setpass") && sender.hasPermission("moderatorgui.setpass") && args.length >= 2 && sender instanceof Player) {
             if (!Bukkit.getOnlineMode()) {
-                sender.sendMessage("The server is running in offline mode! Passwords can only be set when the server is in online mode to protect the server from malicious users");
+                sender.sendMessage(ChatColor.RED + "The server is running in offline mode! Passwords can only be set when the server is in online mode to protect the server from malicious users");
             }
 
             String password = args[1];
