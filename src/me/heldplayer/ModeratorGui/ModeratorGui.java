@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.PersistenceException;
@@ -24,6 +25,7 @@ import me.heldplayer.ModeratorGui.tables.Lists;
 import me.heldplayer.ModeratorGui.tables.Promotions;
 import me.heldplayer.ModeratorGui.tables.Unbans;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -188,7 +190,12 @@ public class ModeratorGui extends JavaPlugin {
         serverThread = new ThreadWebserver(config.getInt("port", 8273), config.getString("host", ""));
 
         if (config.getBoolean("enable-webserver")) {
-            serverThread.startup();
+            if (Bukkit.getOnlineMode()) {
+                serverThread.startup();
+            }
+            else {
+                log.log(Level.SEVERE, "The server is running in offline mode! Disabling the integrated WebGUI.");
+            }
         }
 
         getServer().getPluginManager().registerEvents(new ModGuiListener(this), this);

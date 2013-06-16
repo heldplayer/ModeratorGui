@@ -45,7 +45,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(ChatColor.GRAY + "/" + alias + " import " + ChatColor.DARK_RED + "WARNING: Clears the current database and replaces it with the contents of 'data.bin'");
             if (sender.hasPermission("moderatorgui.uninstall"))
                 sender.sendMessage(ChatColor.GRAY + "/" + alias + " uninstall " + ChatColor.DARK_RED + "WARNING: Deletes database and disables the plugin, the plugin will need to be manually removed after server shutdown");
-            if (sender.hasPermission("moderatorgui.setpass") && sender instanceof Player)
+            if (sender.hasPermission("moderatorgui.setpass") && sender instanceof Player && Bukkit.getOnlineMode())
                 sender.sendMessage(ChatColor.GRAY + "/" + alias + " setpass <password> " + ChatColor.DARK_RED + "WARNING: Password will be visible in console, do not use a password you use anywhere else!");
 
             return true;
@@ -78,31 +78,26 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                         Issues issue = ModeratorGui.instance.getDatabase().find(Issues.class).where().eq("id", id).findUnique();
 
                         issue.toData(DOS);
-
                     break;
                     case BAN:
                         Bans ban = ModeratorGui.instance.getDatabase().find(Bans.class).where().eq("id", id).findUnique();
 
                         ban.toData(DOS);
-
                     break;
                     case UNBAN:
                         Unbans unban = ModeratorGui.instance.getDatabase().find(Unbans.class).where().eq("id", id).findUnique();
 
                         unban.toData(DOS);
-
                     break;
                     case PROMOTE:
                         Promotions promote = ModeratorGui.instance.getDatabase().find(Promotions.class).where().eq("id", id).findUnique();
 
                         promote.toData(DOS);
-
                     break;
                     case DEMOTE:
                         Demotions demote = ModeratorGui.instance.getDatabase().find(Demotions.class).where().eq("id", id).findUnique();
 
                         demote.toData(DOS);
-
                     break;
                     default:
                     break;
@@ -244,6 +239,10 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args[0].equalsIgnoreCase("setpass") && sender.hasPermission("moderatorgui.setpass") && args.length >= 2 && sender instanceof Player) {
+            if (!Bukkit.getOnlineMode()) {
+                sender.sendMessage("The server is running in offline mode! Passwords can only be set when the server is in online mode to protect the server from malicious users");
+            }
+
             String password = args[1];
 
             for (int i = 2; i < args.length; i++) {
