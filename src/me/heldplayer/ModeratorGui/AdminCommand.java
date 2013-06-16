@@ -272,6 +272,9 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
 
             ModeratorGui.instance.saveConfig();
 
+            sender.sendMessage(ChatColor.GREEN + "The password for the user account '" + sender.getName() + "' has been set!");
+            sender.sendMessage(ChatColor.GRAY + "Please note that this is only for the internal webserver, not the PHP interface.");
+
             return true;
         }
 
@@ -293,7 +296,7 @@ public class AdminCommand implements CommandExecutor, TabCompleter {
                 result.add("import");
             }
 
-            if (sender.hasPermission("moderatorgui.setpass")) {
+            if (sender.hasPermission("moderatorgui.setpass") && sender instanceof Player && Bukkit.getOnlineMode()) {
                 result.add("setpass");
             }
 
